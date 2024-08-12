@@ -18,41 +18,37 @@ public class UsrMemberController {
 
 	@RequestMapping("/usr/member/doJoin")
 	@ResponseBody
-	public Object doJoin(String loginId, String loginPw, String name, String nickname, String cellphoneNum,
+	public ResultData doJoin(String loginId, String loginPw, String name, String nickname, String cellphoneNum,
 			String email) {
 
-		if(Ut.isEmptyOrNull(loginId)) {
-			return "아이디 입력해";
+		if (Ut.isEmptyOrNull(loginId)) {
+			return ResultData.from("F-1", "loginId 입력 x");
 		}
-		if(Ut.isEmptyOrNull(loginPw)) {
-			return "비밀번호 입력해";
+		if (Ut.isEmptyOrNull(loginPw)) {
+			return ResultData.from("F-2", "loginPw 입력 x");
 		}
-		if(Ut.isEmptyOrNull(name)) {
-			return "이름 입력해";
+		if (Ut.isEmptyOrNull(name)) {
+			return ResultData.from("F-3", "name 입력 x");
 		}
-		if(Ut.isEmptyOrNull(nickname)) {
-			return "닉네임 입력해";
+		if (Ut.isEmptyOrNull(nickname)) {
+			return ResultData.from("F-4", "nickname 입력 x");
 		}
-		if(Ut.isEmptyOrNull(cellphoneNum)) {
-			return "전화번호 입력해";
+		if (Ut.isEmptyOrNull(cellphoneNum)) {
+			return ResultData.from("F-5", "cellphoneNum 입력 x");
 		}
-		if(Ut.isEmptyOrNull(email)) {
-			return "이메일 입력해";
-		}
-		
-		int id = memberService.doJoin(loginId, loginPw, name, nickname, cellphoneNum, email);
-
-		if (id == -1) {
-			return ResultData.from("F-1", Ut.f("%s는 이미 사용중인 아이디입니다.", loginId));
-		}
-		
-		if (id == -2) {
-			return ResultData.from("F-1", Ut.f("%s와 %s는 이미 사용중인 이름과 이메일입니다.", name, email));
+		if (Ut.isEmptyOrNull(email)) {
+			return ResultData.from("F-6", "email 입력 x");
 		}
 
-		Member member = memberService.getMemberById(id);
+		ResultData doJoinRd = memberService.doJoin(loginId, loginPw, name, nickname, cellphoneNum, email);
 
-		return ResultData.from("S-1", Ut.f("%s님 환영합니다", name), member);
+		if (doJoinRd.isFail()) {
+			return doJoinRd;
+		}
+
+		Member member = memberService.getMemberById((int) doJoinRd.getData1());
+
+		return ResultData.newData(doJoinRd, member);
 	}
 
 }

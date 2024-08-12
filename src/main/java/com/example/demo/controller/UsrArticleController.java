@@ -65,10 +65,10 @@ public class UsrArticleController {
 	public ResultData doWrite(String title, String body) {
 		
 		if(Ut.isEmptyOrNull(title)) {
-			return ResultData.from("S-1", Ut.f("제목을 입력해주세요"));
+			return ResultData.from("F-1", Ut.f("제목을 입력해주세요"));
 		}
 		if(Ut.isEmptyOrNull(body)) {
-			return ResultData.from("S-1", Ut.f("내용을 입력해주세요"));
+			return ResultData.from("F-2", Ut.f("내용을 입력해주세요"));
 		}
 		
 		ResultData writeArticleRd = articleService.writeArticle(title, body);
