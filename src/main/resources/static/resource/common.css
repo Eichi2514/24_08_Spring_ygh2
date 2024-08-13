@@ -1,0 +1,10 @@
+@charset "UTF-8";
+
+a{
+	color:gold;
+	text-decoration: none;
+}
+
+li{
+	list-style: none;
+}

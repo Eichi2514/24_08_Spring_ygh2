@@ -7,5 +7,6 @@
 </head>
 <body>
 	<h1>Main</h1>
+	<button type="button"><a href="../article/list">리스트</a></button>
 </body>
 </html>
