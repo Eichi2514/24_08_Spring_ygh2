@@ -37,7 +37,7 @@ public class MemberService {
 
 		int id = memberRepository.getLastInsertId();
 
-		return ResultData.from("S-1", "회원가입 성공", id);
+		return ResultData.from("S-1", "회원가입 성공", "생성된 회원 id", id);
 	}
 
 	private Member getMemberByNameAndEmail(String name, String email) {
@@ -50,19 +50,6 @@ public class MemberService {
 
 	public Member getMemberById(int id) {
 		return memberRepository.getMemberById(id);
-	}
-
-	public ResultData login(String loginId, String loginPw) {
-		Member notMember = getMemberByLoginId(loginId);
-
-		if (notMember == null) {
-			return ResultData.from("F-1", Ut.f("없는 아이디(%s)입니다.", loginId));
-		}
-		if (!(notMember.getLoginPw().equals(loginPw))) {
-			return ResultData.from("F-2", Ut.f("비밀번호가 틀렸습니다."));
-		}
-
-		return ResultData.from("S-1", "로그인 성공", loginId);
 	}
 
 }
