@@ -2,7 +2,7 @@ package com.example.demo.vo;
 
 import lombok.Getter;
 
-public class ResultData {
+public class ResultData<DT> {
 	@Getter
 	private String ResultCode;
 	@Getter
@@ -10,12 +10,12 @@ public class ResultData {
 	@Getter
 	private Object data1;
 
-	public static ResultData from(String ResultCode, String msg) {
+	public static <DT> ResultData<DT> from(String ResultCode, String msg) {
 		return from(ResultCode, msg, null);
 	}
 
-	public static ResultData from(String ResultCode, String msg, Object data1) {
-		ResultData rd = new ResultData();
+	public static <DT> ResultData<DT> from(String ResultCode, String msg, DT data1) {
+		ResultData<DT> rd = new ResultData<DT>();
 		rd.ResultCode = ResultCode;
 		rd.msg = msg;
 		rd.data1 = data1;

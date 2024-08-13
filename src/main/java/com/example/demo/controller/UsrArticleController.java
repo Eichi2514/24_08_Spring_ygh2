@@ -10,6 +10,8 @@ import com.example.demo.util.Ut;
 import com.example.demo.vo.Article;
 import com.example.demo.vo.ResultData;
 
+import jakarta.servlet.http.HttpSession;
+
 @Controller
 public class UsrArticleController {
 
@@ -32,8 +34,20 @@ public class UsrArticleController {
 
 	@RequestMapping("/usr/article/doModify")
 	@ResponseBody
-	public ResultData doModify(int id, String title, String body) {
+	public ResultData doModify(HttpSession httpSession, int id, String title, String body) {
 
+		boolean isLogined = false;
+		int loginedMemberId = 0;
+		
+		if(httpSession.getAttribute("loginedMemberId") != null) {
+			isLogined = true;
+			loginedMemberId = (int) httpSession.getAttribute("loginedMemberId");
+		}
+		
+		if (isLogined == false) {
+			return ResultData.from("F-A", "로그인 하고 써");
+		}
+		
 		Article article = articleService.getArticleById(id);
 
 		if (article == null) {
@@ -47,7 +61,19 @@ public class UsrArticleController {
 
 	@RequestMapping("/usr/article/doDelete")
 	@ResponseBody
-	public ResultData doDelete(int id) {
+	public ResultData doDelete(HttpSession httpSession, int id) {
+		
+		boolean isLogined = false;
+		int loginedMemberId = 0;
+		
+		if(httpSession.getAttribute("loginedMemberId") != null) {
+			isLogined = true;
+			loginedMemberId = (int) httpSession.getAttribute("loginedMemberId");
+		}
+		
+		if (isLogined == false) {
+			return ResultData.from("F-A", "로그인 하고 써");
+		}
 
 		Article article = articleService.getArticleById(id);
 
@@ -62,22 +88,34 @@ public class UsrArticleController {
 
 	@RequestMapping("/usr/article/doWrite")
 	@ResponseBody
-	public ResultData doWrite(String title, String body) {
+	public ResultData<Article> doWrite(HttpSession httpSession, String title, String body) {
 		
-		if(Ut.isEmptyOrNull(title)) {
-			return ResultData.from("F-1", Ut.f("제목을 입력해주세요"));
+		boolean isLogined = false;
+		int loginedMemberId = 0;
+		
+		if(httpSession.getAttribute("loginedMemberId") != null) {
+			isLogined = true;
+			loginedMemberId = (int) httpSession.getAttribute("loginedMemberId");
 		}
-		if(Ut.isEmptyOrNull(body)) {
-			return ResultData.from("F-2", Ut.f("내용을 입력해주세요"));
+		
+		if (isLogined == false) {
+			return ResultData.from("F-A", "로그인 하고 써");
 		}
 		
-		ResultData writeArticleRd = articleService.writeArticle(title, body);
-		
+		if (Ut.isEmptyOrNull(title)) {
+			return ResultData.from("F-1", "제목을 입력해주세요");
+		}
+		if (Ut.isEmptyOrNull(body)) {
+			return ResultData.from("F-2", "내용을 입력해주세요");
+		}
+
+		ResultData writeArticleRd = articleService.writeArticle(loginedMemberId, title, body);
+
 		int id = (int) writeArticleRd.getData1();
-		
+
 		Article article = articleService.getArticleById(id);
-		
-		return ResultData.from("S-1", Ut.f("%d번 게시글 저장되었습니다", id), article);
+
+		return ResultData.from(writeArticleRd.getResultCode(), writeArticleRd.getMsg(), article);
 	}
 
 	@RequestMapping("/usr/article/getArticles")

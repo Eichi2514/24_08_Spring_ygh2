@@ -18,7 +18,7 @@ public class MemberService {
 		this.memberRepository = memberRepository;
 	}
 
-	public ResultData doJoin(String loginId, String loginPw, String name, String nickname, String cellphoneNum,
+	public ResultData<Integer> doJoin(String loginId, String loginPw, String name, String nickname, String cellphoneNum,
 			String email) {
 
 		Member existsMember = getMemberByLoginId(loginId);
@@ -44,12 +44,25 @@ public class MemberService {
 		return memberRepository.getMemberByNameAndEmail(name, email);
 	}
 
-	private Member getMemberByLoginId(String loginId) {
+	public Member getMemberByLoginId(String loginId) {
 		return memberRepository.getMemberByLoginId(loginId);
 	}
 
 	public Member getMemberById(int id) {
 		return memberRepository.getMemberById(id);
+	}
+
+	public ResultData login(String loginId, String loginPw) {
+		Member notMember = getMemberByLoginId(loginId);
+
+		if (notMember == null) {
+			return ResultData.from("F-1", Ut.f("없는 아이디(%s)입니다.", loginId));
+		}
+		if (!(notMember.getLoginPw().equals(loginPw))) {
+			return ResultData.from("F-2", Ut.f("비밀번호가 틀렸습니다."));
+		}
+
+		return ResultData.from("S-1", "로그인 성공", loginId);
 	}
 
 }
