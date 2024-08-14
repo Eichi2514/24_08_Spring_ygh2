@@ -34,7 +34,6 @@ public class UsrArticleController {
 //
 //		return ResultData.from("S-1", Ut.f("%d번 게시글 입니다", id), "게시글 1개", article);
 //	}
-	
 
 	// 로그인 체크 -> 유무 체크 -> 권한 체크 -> 수정
 //	@RequestMapping("/usr/article/doModify")
@@ -73,36 +72,36 @@ public class UsrArticleController {
 //				article);
 //	}
 
-	@RequestMapping("/usr/article/doDelete")
-	@ResponseBody
-	public String doDelete(HttpSession httpSession, int id) {
-
-		boolean isLogined = false;
-		int loginedMemberId = 0;
-
-		if (httpSession.getAttribute("loginedMemberId") != null) {
-			isLogined = true;
-			loginedMemberId = (int) httpSession.getAttribute("loginedMemberId");
-		}
-
-		if (isLogined == false) {
-			return "로그인 하고 써";
-		}
-
-		Article article = articleService.getArticleById(id);
-
-		if (article == null) {
-			return id + "%d번 게시글은 없습니다";
-		}
-
-		if (article.getMemberId() != loginedMemberId) {
-			return id+"%d번 게시글에 대한 권한이 없습니다";
-		}
-
-		articleService.deleteArticle(id);
-
-		return id+"번 게시글을 삭제했습니다";
-	}
+//	@RequestMapping("/usr/article/doDelete")
+//	@ResponseBody
+//	public String doDelete(HttpSession httpSession, int id) {
+//
+//		boolean isLogined = false;
+//		int loginedMemberId = 0;
+//
+//		if (httpSession.getAttribute("loginedMemberId") != null) {
+//			isLogined = true;
+//			loginedMemberId = (int) httpSession.getAttribute("loginedMemberId");
+//		}
+//
+//		if (isLogined == false) {
+//			return "로그인 하고 써";
+//		}
+//
+//		Article article = articleService.getArticleById(id);
+//
+//		if (article == null) {
+//			return id + "번 게시글은 없습니다";
+//		}
+//
+//		if (article.getMemberId() != loginedMemberId) {
+//			return id + "번 게시글에 대한 권한이 없습니다";
+//		}
+//
+//		articleService.deleteArticle(id);
+//
+//		return id + "번 게시글을 삭제했습니다";
+//	}
 
 	@RequestMapping("/usr/article/doWrite")
 	@ResponseBody
@@ -142,10 +141,10 @@ public class UsrArticleController {
 //		List<Article> articles = articleService.getArticles();
 //		return ResultData.from("S-1", "Article List", "게시글 목록", articles);
 //	}
-	
+
 	@RequestMapping("/usr/article/list")
 	public String showList(HttpSession httpSession, Model model) {
-		
+
 		boolean isLogined = false;
 		int loginedMemberId = 0;
 
@@ -153,61 +152,81 @@ public class UsrArticleController {
 			isLogined = true;
 			loginedMemberId = (int) httpSession.getAttribute("loginedMemberId");
 		}
-		
+
 		List<Article> articles = articleService.getArticles();
-		
+
 		model.addAttribute("articles", articles);
 		model.addAttribute("loginedMemberId", loginedMemberId);
-		
+
 		return "/usr/article/list";
 	}
-	
+
 	@RequestMapping("/usr/article/detail")
 	public String getArticle(int id, Model model) {
 
 		Article article = articleService.getArticleById(id);
-		
 
 		if (article == null) {
 			return "게시글이 없습니다";
 
 		}
-		
+
 		model.addAttribute("article", article);
 
 		return "/usr/article/detail";
 	}
-	
-	@RequestMapping("/usr/article/doModify")
-	public String doModify(HttpSession httpSession, int id, Model model) {
+
+	@RequestMapping("/usr/article/Modify")
+	public String Modify(HttpSession httpSession, int id, Model model) {
 		
 
-		boolean isLogined = false;
-		int loginedMemberId = 0;
-
-		if (httpSession.getAttribute("loginedMemberId") != null) {
-			isLogined = true;
-			loginedMemberId = (int) httpSession.getAttribute("loginedMemberId");
-		}
-
-		if (isLogined == false) {
-			return "로그인 하고 써";
-		}
+		int loginedMemberId = (int) articleService.loginCheck(httpSession);
 
 		Article article = articleService.getArticleById(id);
 
 		if (article == null) {
-			return id + "%d번 게시글은 없습니다";
+			return id + "번 게시글은 없습니다";
 		}
 
 		if (article.getMemberId() != loginedMemberId) {
-			return id+"%d번 게시글에 대한 권한이 없습니다";
+			return id + "번 게시글에 대한 권한이 없습니다";
 		}
 
-	
 		model.addAttribute("article", article);
-		
+
 		return "/usr/article/modify";
 	}
+
+	@RequestMapping("/usr/article/doModify")
+	public String doModify(int id, Model model, String title, String body) {
+		
+		articleService.modifyArticle(id, title, body);
+
+		List<Article> articles = articleService.getArticles();
+
+		model.addAttribute("articles", articles);
+
+		return "/usr/article/list";
+	}
 	
+	@RequestMapping("/usr/article/doDelete")
+	public String doDelete(HttpSession httpSession, int id) {
+
+		int loginedMemberId = (int) articleService.loginCheck(httpSession);
+
+		Article article = articleService.getArticleById(id);
+
+		if (article == null) {
+			return id + "번 게시글은 없습니다";
+		}
+
+		if (article.getMemberId() != loginedMemberId) {
+			return id + "번 게시글에 대한 권한이 없습니다";
+		}
+
+		articleService.deleteArticle(id);
+
+		return "/usr/article/list";
+	}
+
 }

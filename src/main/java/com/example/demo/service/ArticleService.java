@@ -10,6 +10,8 @@ import com.example.demo.util.Ut;
 import com.example.demo.vo.Article;
 import com.example.demo.vo.ResultData;
 
+import jakarta.servlet.http.HttpSession;
+
 @Service
 public class ArticleService {
 
@@ -52,6 +54,19 @@ public class ArticleService {
 
 		}
 		return ResultData.from("S-1", Ut.f("%d번 게시글을 수정했습니다", article.getId()), "수정된 게시글", article);
+	}
+
+	public int loginCheck(HttpSession httpSession) {
+		int loginedMemberId = 0;
+		
+		if (httpSession.getAttribute("loginedMemberId") != null) {
+			loginedMemberId = (int) httpSession.getAttribute("loginedMemberId");
+		}
+
+		if (loginedMemberId == 0) {
+			return 0;
+		}
+		return loginedMemberId;
 	}
 
 }
