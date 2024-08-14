@@ -26,7 +26,7 @@ public class UsrArticleController {
 	@RequestMapping("/usr/article/detail")
 	public String showDetail(HttpServletRequest req, Model model, int id) {
 
-		Rq rq = new Rq(req);
+		Rq rq = (Rq) req.getAttribute("rq");
 
 		Article article = articleService.getForPrintArticle(rq.getLoginedMemberId(), id);
 
@@ -38,24 +38,20 @@ public class UsrArticleController {
 	// 로그인 체크 -> 유무 체크 -> 권한 체크 -> 수정
 	@RequestMapping("/usr/article/doModify")
 	@ResponseBody
-	public ResultData<Article> doModify(HttpServletRequest req, int id, String title, String body) {
+	public String doModify(HttpServletRequest req, int id, String title, String body) {
 
-		Rq rq = new Rq(req);
-
-		if (rq.isLogined() == false) {
-			return ResultData.from("F-A", "로그인 하고 써");
-		}
+		Rq rq = (Rq) req.getAttribute("rq");
 
 		Article article = articleService.getArticleById(id);
 
 		if (article == null) {
-			return ResultData.from("F-1", Ut.f("%d번 게시글은 없습니다", id));
+			return Ut.jsHistoryBack("F-1", Ut.f("%d번 게시글은 없습니다", id));
 		}
 
 		ResultData userCanModifyRd = articleService.userCanModify(rq.getLoginedMemberId(), article);
 
 		if (userCanModifyRd.isFail()) {
-			return userCanModifyRd;
+			return Ut.jsHistoryBack(userCanModifyRd.getResultCode(), userCanModifyRd.getMsg());
 		}
 
 		if (userCanModifyRd.isSuccess()) {
@@ -64,18 +60,14 @@ public class UsrArticleController {
 
 		article = articleService.getArticleById(id);
 
-		return ResultData.from(userCanModifyRd.getResultCode(), userCanModifyRd.getMsg(), "수정 된 게시글", article);
+		return Ut.jsReplace(userCanModifyRd.getResultCode(), userCanModifyRd.getMsg(), "../article/list");
 	}
 
 	@RequestMapping("/usr/article/doDelete")
 	@ResponseBody
 	public String doDelete(HttpServletRequest req, int id) {
 
-		Rq rq = new Rq(req);
-
-		if (rq.isLogined() == false) {
-			return Ut.jsReplace("F-A", "로그인 후 이용하세요", "../member/login");
-		}
+		Rq rq = (Rq) req.getAttribute("rq");
 
 		Article article = articleService.getArticleById(id);
 
@@ -98,34 +90,26 @@ public class UsrArticleController {
 
 	@RequestMapping("/usr/article/doWrite")
 	@ResponseBody
-	public ResultData<Article> doWrite(HttpSession httpSession, String title, String body) {
+	public String doWrite(HttpServletRequest req, String title, String body) {
 
-		boolean isLogined = false;
-		int loginedMemberId = 0;
-
-		if (httpSession.getAttribute("loginedMemberId") != null) {
-			isLogined = true;
-			loginedMemberId = (int) httpSession.getAttribute("loginedMemberId");
-		}
-
-		if (isLogined == false) {
-			return ResultData.from("F-A", "로그인 하고 써");
-		}
+		Rq rq = (Rq) req.getAttribute("rq");
 
 		if (Ut.isEmptyOrNull(title)) {
-			return ResultData.from("F-1", "제목을 입력해주세요");
+//			return ResultData.from("F-1", "제목을 입력해주세요");
+			return Ut.jsReplace("F-1", "제목을 입력해주세요", "../article/write");
 		}
 		if (Ut.isEmptyOrNull(body)) {
-			return ResultData.from("F-2", "내용을 입력해주세요");
+			return Ut.jsReplace("F-2", "내용을 입력해주세요", "../article/write");
 		}
 
-		ResultData writeArticleRd = articleService.writeArticle(loginedMemberId, title, body);
+		ResultData writeArticleRd = articleService.writeArticle(rq.getLoginedMemberId(), title, body);
 
 		int id = (int) writeArticleRd.getData1();
 
 		Article article = articleService.getArticleById(id);
 
-		return ResultData.newData(writeArticleRd, "생성된 게시글", article);
+//		return ResultData.newData(writeArticleRd, "생성된 게시글", article);
+		return Ut.jsReplace("S-1", Ut.f("%d번 게시글이 생성되었습니다", id), "../article/list");
 	}
 
 	@RequestMapping("/usr/article/list")
@@ -137,15 +121,27 @@ public class UsrArticleController {
 
 		return "usr/article/list";
 	}
+
+
 	
 	@RequestMapping("/usr/article/Modify")
 	public String showModify(Model model, int id) {
 
 		Article article = articleService.getArticleById(id);
-
+		
 		model.addAttribute("article", article);
 
 		return "usr/article/modify";
+	}
+	
+	@RequestMapping("/usr/article/write")
+	public String showwrite(Model model) {
+
+		List<Article> articles = articleService.getArticles();
+
+		model.addAttribute("articles", articles);
+
+		return "usr/article/write";
 	}
 
 }
