@@ -1,10 +1,10 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-<c:set var="pageTitle" value="${article.id}번글 수정"></c:set>
+<%-- <c:set var="pageTitle" value="${}번글 수정"></c:set> --%>
 <%@ include file="../common/head.jspf"%>
 <form method="POST" action="doModify">
 	<input type="hidden" value="${article.id}" name="id" />
-	<div>작성자 : ${article.nickname}</div>
+	<div>작성자 : ${article.extra__writer}</div>
 	<div>날짜 : ${article.regDate}</div>
 	<div>
 		새 제목 : <input type="text" placeholder="제목 입력" name="title" />
