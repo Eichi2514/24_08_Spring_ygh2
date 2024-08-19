@@ -60,7 +60,7 @@ public class UsrArticleController {
 
 		article = articleService.getArticleById(id);
 
-		return Ut.jsReplace(userCanModifyRd.getResultCode(), userCanModifyRd.getMsg(), "../article/list");
+		return Ut.jsReplace(userCanModifyRd.getResultCode(), userCanModifyRd.getMsg(), "../article/detail?id="+id);
 	}
 
 	@RequestMapping("/usr/article/doDelete")
@@ -124,10 +124,14 @@ public class UsrArticleController {
 
 
 	
-	@RequestMapping("/usr/article/Modify")
+	@RequestMapping("/usr/article/modify")
 	public String showModify(Model model, int id) {
 
 		Article article = articleService.getArticleById(id);
+		
+		if (article == null) {
+			return Ut.jsHistoryBack("F-1", Ut.f("%d번 게시글은 없습니다", id));
+		}
 		
 		model.addAttribute("article", article);
 
