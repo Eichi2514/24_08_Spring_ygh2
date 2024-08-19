@@ -20,8 +20,9 @@ public class ArticleService {
 		this.articleRepository = articleRepository;
 	}
 
-	public ResultData writeArticle(int memberId, String title, String body) {
-		articleRepository.writeArticle(memberId, title, body);
+	public ResultData writeArticle(int memberId, int boardId, String title, String body) {
+		
+		articleRepository.writeArticle(memberId, boardId, title, body);
 
 		int id = articleRepository.getLastInsertId();
 
@@ -50,8 +51,13 @@ public class ArticleService {
 		return articleRepository.getArticleById(id);
 	}
 
-	public List<Article> getArticles() {
-		return articleRepository.getArticles();
+	public List<Article> getArticles(int boardId, int limitFrom, int itemsInAPage) {
+		return articleRepository.getArticles(boardId, limitFrom, itemsInAPage);
+	}
+	
+
+	public int totalCnt(int boardId) {
+		return articleRepository.totalCnt(boardId);
 	}
 
 	private void controlForPrintData(int loginedMemberId, Article article) {

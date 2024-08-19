@@ -49,3 +49,11 @@ html>body {
 header>div>ul>li {
 	margin-right: 30px;
 }
+
+.list>ul{
+	display: none;
+	position: absolute;
+}
+.list:hover>ul{
+	display: block;
+}

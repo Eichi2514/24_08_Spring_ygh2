@@ -6,19 +6,24 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.example.demo.service.ArticleService;
+import com.example.demo.service.BoardService;
 import com.example.demo.util.Ut;
 import com.example.demo.vo.Article;
+import com.example.demo.vo.Board;
 import com.example.demo.vo.ResultData;
 import com.example.demo.vo.Rq;
 
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
 
 @Controller
 public class UsrArticleController {
+
+	@Autowired
+	private BoardService boardService;
 
 	@Autowired
 	private ArticleService articleService;
@@ -60,7 +65,7 @@ public class UsrArticleController {
 
 		article = articleService.getArticleById(id);
 
-		return Ut.jsReplace(userCanModifyRd.getResultCode(), userCanModifyRd.getMsg(), "../article/detail?id="+id);
+		return Ut.jsReplace(userCanModifyRd.getResultCode(), userCanModifyRd.getMsg(), "../article/detail?id=" + id);
 	}
 
 	@RequestMapping("/usr/article/doDelete")
@@ -90,10 +95,10 @@ public class UsrArticleController {
 
 	@RequestMapping("/usr/article/doWrite")
 	@ResponseBody
-	public String doWrite(HttpServletRequest req, String title, String body) {
+	public String doWrite(HttpServletRequest req, int boardId, String title, String body) {
 
 		Rq rq = (Rq) req.getAttribute("rq");
-
+		
 		if (Ut.isEmptyOrNull(title)) {
 //			return ResultData.from("F-1", "제목을 입력해주세요");
 			return Ut.jsReplace("F-1", "제목을 입력해주세요", "../article/write");
@@ -102,48 +107,64 @@ public class UsrArticleController {
 			return Ut.jsReplace("F-2", "내용을 입력해주세요", "../article/write");
 		}
 
-		ResultData writeArticleRd = articleService.writeArticle(rq.getLoginedMemberId(), title, body);
+		ResultData writeArticleRd = articleService.writeArticle(rq.getLoginedMemberId(), boardId, title, body);
 
 		int id = (int) writeArticleRd.getData1();
 
 		Article article = articleService.getArticleById(id);
 
 //		return ResultData.newData(writeArticleRd, "생성된 게시글", article);
-		return Ut.jsReplace("S-1", Ut.f("%d번 게시글이 생성되었습니다", id), "../article/list");
+		return Ut.jsReplace("S-1", Ut.f("%d번 게시글이 생성되었습니다", id), "../article/list?boardId=0&page=1");
 	}
 
 	@RequestMapping("/usr/article/list")
-	public String showList(Model model) {
+	public String showList(Model model, @RequestParam(defaultValue = "1") int boardId, @RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "") String str) {
+		
+		int itemsInAPage = 10;
+		int limitFrom = (page - 1) * itemsInAPage;
+		
+		int totalCnt = articleService.totalCnt(boardId);
+		int totalPage = (int) Math.ceil(totalCnt / (double) itemsInAPage);
+		
 
-		List<Article> articles = articleService.getArticles();
+		int lpage = page-1;
+		if (page-1 <= 0) {lpage = 1;}
+		int rpage = page+1;
+		if (page+1 >= totalPage) {rpage = totalPage;}
+							
+		List<Article> articles = articleService.getArticles(boardId, limitFrom, itemsInAPage);
+		Board board = boardService.getBoardByid(boardId);
+		
+		System.err.println(board);
 
 		model.addAttribute("articles", articles);
+		model.addAttribute("board", board);
+		model.addAttribute("boardId", boardId);
+		model.addAttribute("totalCnt", totalCnt);
+		model.addAttribute("page", page);
+		model.addAttribute("lpage", lpage);
+		model.addAttribute("rpage", rpage);
+
 
 		return "usr/article/list";
 	}
 
-
-	
 	@RequestMapping("/usr/article/modify")
 	public String showModify(Model model, int id) {
 
 		Article article = articleService.getArticleById(id);
-		
+
 		if (article == null) {
 			return Ut.jsHistoryBack("F-1", Ut.f("%d번 게시글은 없습니다", id));
 		}
-		
+
 		model.addAttribute("article", article);
 
 		return "usr/article/modify";
 	}
-	
+
 	@RequestMapping("/usr/article/write")
 	public String showwrite(Model model) {
-
-		List<Article> articles = articleService.getArticles();
-
-		model.addAttribute("articles", articles);
 
 		return "usr/article/write";
 	}
