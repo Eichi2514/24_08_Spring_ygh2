@@ -24,6 +24,10 @@
 					<th style="text-align: center;">Body</th>
 					<td style="text-align: center;">${article.body}</td>
 				</tr>
+				<tr>
+					<th style="text-align: center;">Views</th>
+					<td style="text-align: center;">${article.hitCount+1}</td>
+				</tr>
 			</tbody>
 		</table>
 		<div class="btns">

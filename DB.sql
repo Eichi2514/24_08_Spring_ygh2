@@ -9,7 +9,8 @@ CREATE TABLE article(
       memberId INT(10) UNSIGNED NOT NULL,
       boardId INT(10) UNSIGNED NOT NULL,
       title CHAR(100) NOT NULL,
-      `body` TEXT NOT NULL
+      `body` TEXT NOT NULL,
+      hitCount INT(10) UNSIGNED NOT NULL DEFAULT 0
 );
 
 CREATE TABLE `member`(
@@ -115,8 +116,8 @@ email = 'abcd@gmail.com';
 INSERT INTO `member`
 SET regDate = NOW(),
 updateDate = NOW(),
-loginId = 'test2',
-loginPw = 'test2',
+loginId = 'zxc',
+loginPw = 'zxc',
 `name` = '회원2_이름',
 nickname = '회원2_닉네임',
 cellphoneNum = '01056785678',
@@ -133,13 +134,13 @@ FROM `member`;
 SELECT *
 FROM board;
 
-SELECT * FROM `member`	WHERE loginId = "admin";
 ###############################################################################
 
-
--- ## 게시글 테스트 데이터 대량 생성
--- INSERT INTO article
--- SET regDate = NOW(),
--- updateDate = NOW(),
--- title = CONCAT('제목__', RAND()),
--- `body` = CONCAT('내용__', RAND());
+## 게시글 테스트 데이터 대량 생성
+INSERT INTO article
+SET regDate = NOW(),
+updateDate = NOW(),
+memberId = FLOOR ((RAND()*2)+2),
+boardId = FLOOR ((RAND()*2)+2),
+title = CONCAT('제목__', RAND()),
+`body` = CONCAT('내용__', RAND());

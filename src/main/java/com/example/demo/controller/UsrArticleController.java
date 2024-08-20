@@ -34,6 +34,8 @@ public class UsrArticleController {
 		Rq rq = (Rq) req.getAttribute("rq");
 
 		Article article = articleService.getForPrintArticle(rq.getLoginedMemberId(), id);
+		
+		articleService.increasseHitCount(id, article.getHitCount());
 
 		model.addAttribute("article", article);
 

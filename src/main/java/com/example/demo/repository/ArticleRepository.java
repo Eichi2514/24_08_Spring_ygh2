@@ -80,4 +80,8 @@ public interface ArticleRepository {
 			""")
 	public int totalCnt(int boardId, String search, String str);
 
+	
+	@Update("UPDATE article SET hitCount = ${hitCount}+1 WHERE id = #{id}")
+	public void increasseHitCount(int id, int hitCount);
+
 }
