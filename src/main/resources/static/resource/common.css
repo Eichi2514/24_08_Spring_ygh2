@@ -37,9 +37,9 @@
 	font-family: 'LotteMartDream', sans-serif;
 }
 
-html{
+html {
 	background: black;
-	color : white;
+	color: white;
 }
 
 html>body {
@@ -50,10 +50,14 @@ header>div>ul>li {
 	margin-right: 30px;
 }
 
-.list>ul{
+.list>ul {
 	display: none;
 	position: absolute;
 }
-.list:hover>ul{
+
+.list:hover>ul {
 	display: block;
+}
+.pagination > a{
+	padding: 5px;
 }

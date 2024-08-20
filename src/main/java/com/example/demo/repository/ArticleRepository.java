@@ -41,27 +41,43 @@ public interface ArticleRepository {
 	public Article getArticleById(int id);
 
 	@Select("""
+			<script>
 			SELECT A.* , M.nickname AS extra__writer
 			FROM article AS A
 			INNER JOIN `member` AS M
 			ON A.memberId = M.id
-			WHERE A.boardId = #{boardId}
+			WHERE 1
+			<if test="boardId > 0">
+			AND A.boardId = #{boardId}
+			</if>
+			<if test="search != ''">
+			AND ${search} LIKE '%${str}%'
+			</if>
 			ORDER BY A.id DESC
 			LIMIT #{limitFrom}, #{itemsInAPage}
+			</script>
 			""")
-	public List<Article> getArticles(int boardId, int limitFrom, int itemsInAPage);
+	public List<Article> getArticles(int boardId, int limitFrom, int itemsInAPage, String search, String str);
 
 	@Select("SELECT LAST_INSERT_ID();")
 	public int getLastInsertId();
 
 	@Select("""
+			<script>
 			SELECT COUNT(*)
 			FROM article AS A
 			INNER JOIN board AS B
 			ON A.boardId = B.id
-			WHERE A.boardId = #{boardId}
+			WHERE 1
+			<if test="boardId > 0">
+			AND A.boardId = #{boardId}
+			</if>
+			<if test="search != ''">
+			AND ${search} LIKE '%${str}%'
+			</if>
 			ORDER BY A.id DESC
+			</script>
 			""")
-	public int totalCnt(int boardId);
+	public int totalCnt(int boardId, String search, String str);
 
 }

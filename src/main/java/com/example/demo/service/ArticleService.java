@@ -51,13 +51,13 @@ public class ArticleService {
 		return articleRepository.getArticleById(id);
 	}
 
-	public List<Article> getArticles(int boardId, int limitFrom, int itemsInAPage) {
-		return articleRepository.getArticles(boardId, limitFrom, itemsInAPage);
+	public List<Article> getArticles(int boardId, int limitFrom, int itemsInAPage, String search, String str) {
+		return articleRepository.getArticles(boardId, limitFrom, itemsInAPage, search, str);
 	}
 	
 
-	public int totalCnt(int boardId) {
-		return articleRepository.totalCnt(boardId);
+	public int totalCnt(int boardId, String search, String str) {
+		return articleRepository.totalCnt(boardId, search, str);
 	}
 
 	private void controlForPrintData(int loginedMemberId, Article article) {

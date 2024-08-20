@@ -118,12 +118,13 @@ public class UsrArticleController {
 	}
 
 	@RequestMapping("/usr/article/list")
-	public String showList(Model model, @RequestParam(defaultValue = "1") int boardId, @RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "") String str) {
+	public String showList(Model model, @RequestParam(defaultValue = "0") int boardId, @RequestParam(defaultValue = "1") int page,
+			@RequestParam(defaultValue = "") String search, @RequestParam(defaultValue = "") String str) {
 		
 		int itemsInAPage = 10;
 		int limitFrom = (page - 1) * itemsInAPage;
 		
-		int totalCnt = articleService.totalCnt(boardId);
+		int totalCnt = articleService.totalCnt(boardId, search, str);
 		int totalPage = (int) Math.ceil(totalCnt / (double) itemsInAPage);
 		
 
@@ -132,16 +133,17 @@ public class UsrArticleController {
 		int rpage = page+1;
 		if (page+1 >= totalPage) {rpage = totalPage;}
 							
-		List<Article> articles = articleService.getArticles(boardId, limitFrom, itemsInAPage);
+		List<Article> articles = articleService.getArticles(boardId, limitFrom, itemsInAPage, search, str);
 		Board board = boardService.getBoardByid(boardId);
 		
-		System.err.println(board);
-
 		model.addAttribute("articles", articles);
 		model.addAttribute("board", board);
 		model.addAttribute("boardId", boardId);
 		model.addAttribute("totalCnt", totalCnt);
+		model.addAttribute("totalPage", totalPage);
 		model.addAttribute("page", page);
+		model.addAttribute("search", search);
+		model.addAttribute("str", str);
 		model.addAttribute("lpage", lpage);
 		model.addAttribute("rpage", rpage);
 
