@@ -38,6 +38,16 @@ CREATE TABLE board(
       delDate DATETIME COMMENT '탈퇴 날짜'
 );
 
+CREATE TABLE reactionPoint(
+      id INT(10) UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
+      regDate DATETIME NOT NULL,
+      updateDate DATETIME NOT NULL,
+      memberId INT(10) UNSIGNED NOT NULL,
+      relId INT(10) UNSIGNED NOT NULL,
+      relTypecode CHAR(20) NOT NULL,
+      `point` INT(10)
+);
+
 ## 게시판 테스트 데이터 생성
 INSERT INTO board
 SET regDate = NOW(),
@@ -123,6 +133,14 @@ nickname = '회원2_닉네임',
 cellphoneNum = '01056785678',
 email = 'abcde@gmail.com';
 
+INSERT INTO reactionPoint
+SET regDate = NOW(),
+updateDate = NOW(),
+memberId = 1,
+relId = 1,
+relTypecode = "article",
+`point` = 1;
+
 SELECT *
 FROM article
 ORDER BY id DESC;
@@ -133,6 +151,9 @@ FROM `member`;
 
 SELECT *
 FROM board;
+
+SELECT *
+FROM reactionPoint;
 
 ###############################################################################
 
