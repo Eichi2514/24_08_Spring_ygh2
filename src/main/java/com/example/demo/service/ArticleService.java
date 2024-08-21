@@ -85,9 +85,19 @@ public class ArticleService {
 		return ResultData.from("S-1", Ut.f("%d번 게시글을 수정했습니다", article.getId()), "수정된 게시글", article);
 	}
 
-	public void increasseHitCount(int id, int hitCount) {
-		articleRepository.increasseHitCount(id, hitCount);
-		
+	public ResultData increaseHitCount(int id) {
+		int affectedRow = articleRepository.increaseHitCount(id);
+
+		if (affectedRow == 0) {
+			return ResultData.from("F-1", "해당 게시글 없습니다", "id", id);
+		}
+
+		return ResultData.from("S-1", "해당 게시글 조회수 증가", "id", id);
+
+	}
+
+	public Object getArticleHitCount(int id) {
+		return articleRepository.getArticleHitCount(id);
 	}
 
 }

@@ -81,7 +81,14 @@ public interface ArticleRepository {
 	public int totalCnt(int boardId, String search, String str);
 
 	
-	@Update("UPDATE article SET hitCount = ${hitCount}+1 WHERE id = #{id}")
-	public void increasseHitCount(int id, int hitCount);
+	@Update("UPDATE article SET hitCount = hitCount+1 WHERE id = #{id}")
+	public int increaseHitCount(int id);
+	
+	@Select("""
+			SELECT hitCount
+			FROM article
+			WHERE id = #{id}
+				""")
+	public int getArticleHitCount(int id);
 
 }

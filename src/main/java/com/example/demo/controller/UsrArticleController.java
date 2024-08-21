@@ -32,17 +32,31 @@ public class UsrArticleController {
 	public String showDetail(HttpServletRequest req, Model model, int id) {
 
 		Rq rq = (Rq) req.getAttribute("rq");
-
-		Article article = articleService.getForPrintArticle(rq.getLoginedMemberId(), id);
 		
-		articleService.increasseHitCount(id, article.getHitCount());
+		Article article = articleService.getForPrintArticle(rq.getLoginedMemberId(), id);
 
 		model.addAttribute("article", article);
 
 		return "usr/article/detail";
 	}
 
-	// 로그인 체크 -> 유무 체크 -> 권한 체크 -> 수정
+	@RequestMapping("/usr/article/doincreaseHitCountRd")
+	@ResponseBody
+	public ResultData doincreaseHitCountRd(int id) {
+
+		ResultData increaseHitCountRd = articleService.increaseHitCount(id);
+
+		if (increaseHitCountRd.isFail()) {
+			return increaseHitCountRd;
+		}
+
+		ResultData rd = ResultData.newData(increaseHitCountRd, "hitCount", articleService.getArticleHitCount(id));
+		
+		rd.setData2("조회수가 증가된 게시글의 id", id);
+		
+		return rd;
+	}
+
 	@RequestMapping("/usr/article/doModify")
 	@ResponseBody
 	public String doModify(HttpServletRequest req, int id, String title, String body) {
@@ -100,7 +114,7 @@ public class UsrArticleController {
 	public String doWrite(HttpServletRequest req, int boardId, String title, String body) {
 
 		Rq rq = (Rq) req.getAttribute("rq");
-		
+
 		if (Ut.isEmptyOrNull(title)) {
 //			return ResultData.from("F-1", "제목을 입력해주세요");
 			return Ut.jsReplace("F-1", "제목을 입력해주세요", "../article/write");
@@ -120,24 +134,28 @@ public class UsrArticleController {
 	}
 
 	@RequestMapping("/usr/article/list")
-	public String showList(Model model, @RequestParam(defaultValue = "0") int boardId, @RequestParam(defaultValue = "1") int page,
-			@RequestParam(defaultValue = "") String search, @RequestParam(defaultValue = "") String str) {
-		
+	public String showList(Model model, @RequestParam(defaultValue = "0") int boardId,
+			@RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "") String search,
+			@RequestParam(defaultValue = "") String str) {
+
 		int itemsInAPage = 10;
 		int limitFrom = (page - 1) * itemsInAPage;
-		
+
 		int totalCnt = articleService.totalCnt(boardId, search, str);
 		int totalPage = (int) Math.ceil(totalCnt / (double) itemsInAPage);
-		
 
-		int lpage = page-1;
-		if (page-1 <= 0) {lpage = 1;}
-		int rpage = page+1;
-		if (page+1 >= totalPage) {rpage = totalPage;}
-							
+		int lpage = page - 1;
+		if (page - 1 <= 0) {
+			lpage = 1;
+		}
+		int rpage = page + 1;
+		if (page + 1 >= totalPage) {
+			rpage = totalPage;
+		}
+
 		List<Article> articles = articleService.getArticles(boardId, limitFrom, itemsInAPage, search, str);
 		Board board = boardService.getBoardByid(boardId);
-		
+
 		model.addAttribute("articles", articles);
 		model.addAttribute("board", board);
 		model.addAttribute("boardId", boardId);
@@ -148,7 +166,6 @@ public class UsrArticleController {
 		model.addAttribute("str", str);
 		model.addAttribute("lpage", lpage);
 		model.addAttribute("rpage", rpage);
-
 
 		return "usr/article/list";
 	}
