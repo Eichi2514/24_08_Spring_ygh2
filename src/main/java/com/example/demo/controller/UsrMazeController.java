@@ -3,13 +3,32 @@ package com.example.demo.controller;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.example.demo.vo.Maze;
 
 @Controller
 public class UsrMazeController {
+	int mapWidth = 200;
+	int mapHeight = 200;
 	
-	Maze maze;
+	int[][] map = new int[mapHeight][mapWidth];
+
+	int xCood = 5;
+	int yCood = 5;
+	
+	UsrMazeController (){
+		for (int X = 0; X < mapWidth; X++) {
+			for (int Y = 0; Y < mapHeight; Y++) {
+
+				if (X == 0 || X == mapWidth-1 || Y == 0 || Y == mapHeight-1)
+					map[X][Y] = 1;
+			}
+		}
+
+		map[5][5] = 2;
+		
+	}
 
 	@RequestMapping("/usr/maze/map")
 	public String showMap(Model model) {
@@ -18,47 +37,31 @@ public class UsrMazeController {
 		// 1 : 벽
 		// 2 : 캐릭터
 
-		int[][] map = new int[100][100];
-
-		int xCood = 1;
-		int yCood = 1;
-
-		for (int X = 0; X < 100; X++) {
-			for (int Y = 0; Y < 100; Y++) {
-
-				if (X == 0 || X == 99 || Y == 0 || Y == 99)
-					map[X][Y] = 1;
-			}
-		}
-
-		map[5][5] = 2;
-
 		model.addAttribute("map", map);
-		model.addAttribute("xCood", xCood);
-		model.addAttribute("yCood", yCood);
+		model.addAttribute("mapWidth", mapWidth);
+		model.addAttribute("mapHeight", mapHeight);
 
 		return "/usr/maze/map";
 	}
 
 	@RequestMapping("/usr/maze/keyUp")
-	public Maze keyUp(int[][] map, int xCood, int yCood) {
+	@ResponseBody
+	public String keyUp() {
 
 		if (map[xCood - 1][yCood] == 0 && map[xCood - 1][yCood + 1] == 0 && map[xCood - 1][yCood + 2] == 0
 				&& map[xCood - 1][yCood + 3] == 0 && map[xCood - 1][yCood + 4] == 0 && map[xCood - 1][yCood + 5] == 0
 				&& map[xCood - 1][yCood + 6] == 0 && map[xCood - 1][yCood + 7] == 0 && map[xCood - 1][yCood + 8] == 0
 				&& map[xCood - 1][yCood + 9] == 0) {
-			
+			map[xCood][yCood] = 0;
 			xCood--;
-			map[xCood][yCood] = 1;
+			map[xCood][yCood] = 2;
 		}
-
-		maze = new Maze(map, xCood, yCood);
-
-		return maze;
+		return "success";
 	}
-	
+
 	@RequestMapping("/usr/maze/keyDown")
-	public Maze keyDown(int[][] map, int xCood, int yCood) {
+	@ResponseBody
+	public String keyDown() {
 
 		if (map[xCood + 11][yCood] == 0 && map[xCood + 11][yCood + 1] == 0 && map[xCood + 11][yCood + 2] == 0
 				&& map[xCood + 11][yCood + 3] == 0 && map[xCood + 11][yCood + 4] == 0 && map[xCood + 11][yCood + 5] == 0
@@ -66,16 +69,14 @@ public class UsrMazeController {
 				&& map[xCood + 11][yCood + 9] == 0) {
 			map[xCood][yCood] = 0;
 			xCood++;
-			map[xCood][yCood] = 1;
+			map[xCood][yCood] = 2;
 		}
-
-		maze = new Maze(map, xCood, yCood);
-
-		return maze;
+		return "success";
 	}
-	
+
 	@RequestMapping("/usr/maze/keyLeft")
-	public Maze keyLeft(int[][] map, int xCood, int yCood) {
+	@ResponseBody
+	public String keyLeft() {
 
 		if (map[xCood][yCood - 1] == 0 && map[xCood + 1][yCood - 1] == 0 && map[xCood + 2][yCood - 1] == 0
 				&& map[xCood + 3][yCood - 1] == 0 && map[xCood + 4][yCood - 1] == 0 && map[xCood + 5][yCood - 1] == 0
@@ -83,29 +84,24 @@ public class UsrMazeController {
 				&& map[xCood + 9][yCood - 1] == 0) {
 			map[xCood][yCood] = 0;
 			yCood--;
-			map[xCood][yCood] = 1;
+			map[xCood][yCood] = 2;
 		}
-
-		maze = new Maze(map, xCood, yCood);
-
-		return maze;
+		return "success";
 	}
-	
+
 	@RequestMapping("/usr/maze/keyRight")
-	public Maze keyRight(int[][] map, int xCood, int yCood) {
+	@ResponseBody
+	public String keyRight(Model model) {
 
 		if (map[xCood][yCood + 11] == 0 && map[xCood + 1][yCood + 11] == 0 && map[xCood + 2][yCood + 11] == 0
 				&& map[xCood + 3][yCood + 11] == 0 && map[xCood + 4][yCood + 11] == 0 && map[xCood + 5][yCood + 11] == 0
 				&& map[xCood + 6][yCood + 11] == 0 && map[xCood + 7][yCood + 11] == 0 && map[xCood + 8][yCood + 11] == 0
 				&& map[xCood + 9][yCood + 11] == 0) {
 			map[xCood][yCood] = 0;
-			yCood--;
-			map[xCood][yCood] = 1;
+			yCood++;
+			map[xCood][yCood] = 2;
 
 		}
-
-		maze = new Maze(map, xCood, yCood);
-
-		return maze;
+		return "success";
 	}
 }

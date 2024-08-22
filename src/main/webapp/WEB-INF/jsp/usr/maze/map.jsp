@@ -4,120 +4,93 @@
 <%@ include file="../common/head.jspf"%>
 <hr />
 <script>
-document.addEventListener("keydown", checkKey, false);
-
-function checkKey(e) {
-	console.clear();
-	if (e.keyCode === 37) {
+$(window).keydown(function (e) {
+	if (e.keyCode === 37) { // Left arrow key
 		Left();
-	} else if (e.keyCode === 38) {
+	} else if (e.keyCode === 38) { // Up arrow key
 		Up();
-	} else if (e.keyCode === 39) {
+	} else if (e.keyCode === 39) { // Right arrow key
 		Right();
-	} else if (e.keyCode === 40) {
+	} else if (e.keyCode === 40) { // Down arrow key
 		Down();
 	}
-}
-</script>
-<script>
+});
+
 function Up() {
-	fetch('/keyUp', {
+	fetch('/usr/maze/keyUp', {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json'
-		},
-		body: JSON.stringify({
-			map: map,
-			xCood: xCood,
-			yCood: yCood
-		})
-	})
-	.then(response => {
-		if (response.ok) {
-			window.location.reload(); // 성공 시 페이지 새로고침
-		} else {
-			alert("서버에서 오류가 발생했습니다.");
 		}
 	})
-	.catch(error => {
-		console.error('에러 발생:', error);
-	});
+	.then(response => response.text())
+	.then(result => {
+		if (result === "success") {
+			window.location.reload();
+		} else {
+			alert("Error occurred: " + result);
+		}
+	})
+	.catch(error => console.error('Error:', error));
 }
 
 function Down() {
-	fetch('/keyDown', {
+	fetch('/usr/maze/keyDown', {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json'
-		},
-		body: JSON.stringify({
-			map: map,
-			xCood: xCood,
-			yCood: yCood
-		})
-	})
-	.then(response => {
-		if (response.ok) {
-			window.location.reload(); // 성공 시 페이지 새로고침
-		} else {
-			alert("서버에서 오류가 발생했습니다.");
 		}
 	})
-	.catch(error => {
-		console.error('에러 발생:', error);
-	});
+	.then(response => response.text())
+	.then(result => {
+		if (result === "success") {
+			window.location.reload();
+		} else {
+			alert("Error occurred: " + result);
+		}
+	})
+	.catch(error => console.error('Error:', error));
 }
 
 function Left() {
-	fetch('/keyLeft', {
+	fetch('/usr/maze/keyLeft', {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json'
-		},
-		body: JSON.stringify({
-			map: map,
-			xCood: xCood,
-			yCood: yCood
-		})
-	})
-	.then(response => {
-		if (response.ok) {
-			window.location.reload(); // 성공 시 페이지 새로고침
-		} else {
-			alert("서버에서 오류가 발생했습니다.");
 		}
 	})
-	.catch(error => {
-		console.error('에러 발생:', error);
-	});
+	.then(response => response.text())
+	.then(result => {
+		if (result === "success") {
+			window.location.reload();
+		} else {
+			alert("Error occurred: " + result);
+		}
+	})
+	.catch(error => console.error('Error:', error));
 }
 
 function Right() {
-	fetch('/keyRight', {
+	fetch('/usr/maze/keyRight', {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json'
-		},
-		body: JSON.stringify({
-			map: map,
-			xCood: xCood,
-			yCood: yCood
-		})
-	})
-	.then(response => {
-		if (response.ok) {
-			window.location.reload(); // 성공 시 페이지 새로고침
-		} else {
-			alert("서버에서 오류가 발생했습니다.");
 		}
 	})
-	.catch(error => {
-		console.error('에러 발생:', error);
-	});
+	.then(response => response.text())
+	.then(result => {
+		if (result === "success") {
+			window.location.reload();
+		} else {
+			alert("Error occurred: " + result);
+		}
+	})
+	.catch(error => console.error('Error:', error));
 }
 </script>
-<c:forEach var="x" begin="0" end="99">
-	<c:forEach var="y" begin="0" end="99">
+
+<c:forEach var="x" begin="0" end="${mapWidth}">
+	<c:forEach var="y" begin="0" end="${mapHeight}">
 		<c:if test="${map[x][y] != 2}">
 			<div class="text-gray-500 inline-block">${map[x][y]}</div>
 		</c:if>
