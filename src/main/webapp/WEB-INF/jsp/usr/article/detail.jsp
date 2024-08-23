@@ -32,39 +32,6 @@
 	});
 </script>
 
-<script>
-/* const localStorageKey2 = 'article__' + params.id + '__Like';
-const localStorageKey3 = 'article__' + params.id + '__Hite'; */
-
-$(".ditailLike").click(function () {
-	let has = $(".ditailLike").hasClass("text-red-500");
-
-	if (!has) {
-		$(".ditailLike").addClass("text-red-500");
-	} else {
-		$(".ditailLike").removeClass("text-red-500");
-	}
-
-/* 	if (localStorage.getItem(localStorageKey3)) {
-		localStorage.removeItem(localStorageKey3);
-	}
-
-	localStorage.setItem(localStorageKey2, true); */
-});
-
-$(".ditailHate").click(function () {
-
-	$(".ditailLike").removeClass("text-red-500");
-
-/* 	if (localStorage.getItem(localStorageKey2)) {
-		localStorage.removeItem(localStorageKey2);
-	}
-
-	localStorage.setItem(localStorageKey3, true); */
-
-});
-</script>
-
 <section class="mt-8 text-xl px-4">
 	<div class="mx-auto">
 		<table border="1" cellspacing="0" cellpadding="5" style="width: 100%; border-collapse: collapse;">
@@ -91,9 +58,9 @@ $(".ditailHate").click(function () {
 				</tr>
 			</tbody>
 		</table>
-		<div class="ditailLike cursor-pointer inline-block z-20" style="text-align: center;">좋아요 ▲</div>
+		<a href="" class="like_btn cursor-pointer ${userCanReaction == 1 ? 'text-red-500' : '' } inline-block" style="text-align: center;">Like ▲(${article.goodReactionPoint})</a>
 		<br />
-		<div class="ditailHate cursor-pointer inline-block z-20" style="text-align: center;">싫어요 ▼</div>
+		<a href="" class="bad_btn cursor-pointer ${userCanReaction == -1 ? 'text-blue-500' : '' } inline-block" style="text-align: center;"> Bad ▼(${article.badReactionPoint})</a>
 		<div class="btns">
 			<button type="button" onclick="history.back()">뒤로가기</button>
 			<c:if test="${article.userCanModify }">

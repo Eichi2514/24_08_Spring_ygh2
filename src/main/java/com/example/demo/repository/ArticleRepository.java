@@ -23,11 +23,11 @@ public interface ArticleRepository {
 	public void modifyArticle(int id, String title, String body);
 
 	@Select("""
-			SELECT A.* , M.nickname AS extra__writer
-			FROM article AS A
-			INNER JOIN `member` AS M
-			ON A.memberId = M.id
-			WHERE A.id = #{id}
+			SELECT A.*, M.nickname AS extra__writer
+            FROM article AS A
+            INNER JOIN `member` AS M 
+            ON A.memberId = M.id
+            WHERE A.id = #{id}			
 				""")
 	public Article getForPrintArticle(int id);
 
@@ -42,10 +42,10 @@ public interface ArticleRepository {
 
 	@Select("""
 			<script>
-			SELECT A.* , M.nickname AS extra__writer
-			FROM article AS A
-			INNER JOIN `member` AS M
-			ON A.memberId = M.id
+			SELECT A.*, M.nickname AS extra__writer
+            FROM article AS A
+            INNER JOIN `member` AS M 
+            ON A.memberId = M.id
 			WHERE 1
 			<if test="boardId > 0">
 			AND A.boardId = #{boardId}

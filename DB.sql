@@ -87,7 +87,7 @@ title = '제목2',
 INSERT INTO article
 SET regDate = NOW(),
 updateDate = NOW(),
-memberId = 1,
+memberId = 2,
 boardId = 2,
 title = '제목3',
 `body` = '내용3';
@@ -95,7 +95,7 @@ title = '제목3',
 INSERT INTO article
 SET regDate = NOW(),
 updateDate = NOW(),
-memberId = 1,
+memberId = 3,
 boardId = 2,
 title = '제목4',
 `body` = '내용4';
@@ -133,10 +133,44 @@ nickname = '회원2_닉네임',
 cellphoneNum = '01056785678',
 email = 'abcde@gmail.com';
 
+
+## 리액션 포인트  테스트 데이터 생성
 INSERT INTO reactionPoint
 SET regDate = NOW(),
 updateDate = NOW(),
 memberId = 1,
+relId = 1,
+relTypecode = "article",
+`point` = -1;
+
+INSERT INTO reactionPoint
+SET regDate = NOW(),
+updateDate = NOW(),
+memberId = 1,
+relId = 2,
+relTypecode = "article",
+`point` = 1;
+
+INSERT INTO reactionPoint
+SET regDate = NOW(),
+updateDate = NOW(),
+memberId = 2,
+relId = 1,
+relTypecode = "article",
+`point` = -1;
+
+INSERT INTO reactionPoint
+SET regDate = NOW(),
+updateDate = NOW(),
+memberId = 2,
+relId = 2,
+relTypecode = "article",
+`point` = -1;
+
+INSERT INTO reactionPoint
+SET regDate = NOW(),
+updateDate = NOW(),
+memberId = 3,
 relId = 1,
 relTypecode = "article",
 `point` = 1;
@@ -154,6 +188,34 @@ FROM board;
 
 SELECT *
 FROM reactionPoint;
+
+## LEFT JOIN 버전
+SELECT A.*, M.nickname AS extra__writer,
+IFNULL(SUM(RP.point), 0) AS extra__sumReactionPoint,
+IFNULL(SUM(IF(RP.point > 0, RP.point, 0)), 0) AS extra__goodReactionPoint,
+IFNULL(SUM(IF(RP.point < 0, RP.point, 0)), 0) AS extra__badReactionPoint
+FROM article AS A
+INNER JOIN `member` AS M 
+ON A.memberId = M.id
+LEFT JOIN `reactionPoint` AS RP 
+ON A.id = RP.relId AND RP.relTypeCode = "article"
+GROUP BY A.id, M.nickname
+ORDER BY A.id DESC;
+
+## 서브쿼리
+SELECT A.* , 
+IFNULL(SUM(RP.point),0) AS extra__sumReactionPoint,
+IFNULL(SUM(IF(RP.point > 0, RP.point, 0)),0) AS extra__goodReactionPoint,
+IFNULL(SUM(IF(RP.point < 0, RP.point, 0)),0) AS extra__badReactionPoint
+FROM (
+SELECT A.* , M.nickname AS extra__writer 
+FROM article AS A
+INNER JOIN `member` AS M
+ON A.memberId = M.id) AS A
+LEFT JOIN `reactionPoint` AS RP
+ON A.id = RP.relId AND RP.relTypecode = "article"
+GROUP BY A.id
+ORDER BY A.id DESC;
 
 ###############################################################################
 
