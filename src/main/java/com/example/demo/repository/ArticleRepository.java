@@ -80,15 +80,46 @@ public interface ArticleRepository {
 			""")
 	public int totalCnt(int boardId, String search, String str);
 
-	
-	@Update("UPDATE article SET hitCount = hitCount+1 WHERE id = #{id}")
-	public int increaseHitCount(int id);
-	
 	@Select("""
 			SELECT hitCount
 			FROM article
 			WHERE id = #{id}
 				""")
 	public int getArticleHitCount(int id);
+
+	@Update("""
+			UPDATE article
+			SET goodReactionPoint = goodReactionPoint + 1
+			WHERE id = #{relId}
+			""")
+	public int increaseGoodReactionPoint(int relId);
+
+	@Update("""
+			UPDATE article
+			SET goodReactionPoint = goodReactionPoint - 1
+			WHERE id = #{relId}
+			""")
+	public int decreaseGoodReactionPoint(int relId);
+
+	@Update("""
+			UPDATE article
+			SET badReactionPoint = badReactionPoint + 1
+			WHERE id = #{relId}
+			""")
+	public int increaseBadReactionPoint(int relId);
+
+	@Update("""
+			UPDATE article
+			SET badReactionPoint = badReactionPoint - 1
+			WHERE id = #{relId}
+			""")
+	public int decreaseBadReactionPoint(int relId);
+
+	@Update("""
+			UPDATE article
+			SET hitCount = hitCount + 1
+			WHERE id = #{id}
+			""")
+	public int increaseHitCount(int id);
 
 }

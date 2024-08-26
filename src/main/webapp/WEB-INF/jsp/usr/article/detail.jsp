@@ -3,7 +3,6 @@
 <c:set var="pageTitle" value="DETAIL"></c:set>
 <%@ include file="../common/head.jspf"%>
 <hr />
-<%-- <iframe src="http://localhost:8080/usr/article/doincreaseHitCount?id=${article.id} }" frameborder="0"></iframe> --%>
 <script>
 	const params = {};
 	params.id = parseInt('${param.id}');
@@ -58,9 +57,9 @@
 				</tr>
 			</tbody>
 		</table>
-		<a href="" class="like_btn cursor-pointer ${userCanReaction == 1 ? 'text-red-500' : '' } inline-block" style="text-align: center;">Like ▲(${article.goodReactionPoint})</a>
+		<a href="/usr/reactionPoint/doGoodReaction?relTypeCode=article&relId=${param.id }&replaceUri=${rq.currentUri}" class="like_btn cursor-pointer ${isAlreadyAddGoodRp ? 'text-red-500' : '' } inline-block" style="text-align: center;">Like ▲(${article.goodReactionPoint})</a>
 		<br />
-		<a href="" class="bad_btn cursor-pointer ${userCanReaction == -1 ? 'text-blue-500' : '' } inline-block" style="text-align: center;"> Bad ▼(${article.badReactionPoint})</a>
+		<a href="/usr/reactionPoint/doBadReaction?relTypeCode=article&relId=${param.id }&replaceUri=${rq.currentUri}" class="bad_btn cursor-pointer ${isAlreadyAddBadRp ? 'text-blue-500' : '' } inline-block" style="text-align: center;"> Bad ▼(${article.badReactionPoint})</a>
 		<div class="btns">
 			<button type="button" onclick="history.back()">뒤로가기</button>
 			<c:if test="${article.userCanModify }">

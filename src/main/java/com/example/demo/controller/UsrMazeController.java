@@ -9,8 +9,8 @@ import com.example.demo.vo.Maze;
 
 @Controller
 public class UsrMazeController {
-	int mapWidth = 200;
-	int mapHeight = 200;
+	int mapWidth = 50;
+	int mapHeight = 50;
 	
 	int[][] map = new int[mapHeight][mapWidth];
 
