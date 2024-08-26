@@ -10,6 +10,7 @@
 	var isAlreadyAddGoodRp = ${isAlreadyAddGoodRp};
 	var isAlreadyAddBadRp = ${isAlreadyAddBadRp};
 </script>
+
 <script>
 	function ArticleDetail__doIncreaseHitCount() {
 		const localStorageKey = 'article__' + params.id + '__alreadyOnView';
@@ -31,39 +32,6 @@
 	$(function() {
 		ArticleDetail__doIncreaseHitCount();
 	});
-</script>
-<script>
-	const params = {};
-	params.id = parseInt('${param.id}');
-
-	var isAlreadyAddGoodRp = ${isAlreadyAddGoodRp};
-	var isAlreadyAddBadRp = ${isAlreadyAddBadRp};
-</script>
-<!-- 조회수 -->
-<script>
-	function ArticleDetail__doIncreaseHitCount() {
-		const localStorageKey = 'article__' + params.id + '__alreadyOnView';
-
-		if (localStorage.getItem(localStorageKey)) {
-			return;
-		}
-
-		localStorage.setItem(localStorageKey, true);
-
-		$.get('../article/doIncreaseHitCountRd', {
-			id : params.id,
-			ajaxMode : 'Y'
-		}, function(data) {
-			console.log(data);
-			console.log(data.data1);
-			$('.article-detail__hit-count').empty().html(data.data1);
-		}, 'json')
-	}
-
-	$(function() {
-		// 		ArticleDetail__doIncreaseHitCount();
-		setTimeout(ArticleDetail__doIncreaseHitCount, 2000);
-	})
 </script>
 <!-- 좋아요 싫어요  -->
 <script>

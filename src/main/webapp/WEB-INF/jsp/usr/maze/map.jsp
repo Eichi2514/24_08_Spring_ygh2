@@ -5,20 +5,25 @@
 <hr />
 <script>
 $(window).keydown(function (e) {
-	if (e.keyCode === 37) { // Left arrow key
-		Left();
-	} else if (e.keyCode === 38) { // Up arrow key
-		Up();
-	} else if (e.keyCode === 39) { // Right arrow key
-		Right();
-	} else if (e.keyCode === 40) { // Down arrow key
-		Down();
+	if (e.keyCode === 37) { 
+		Left(${charac}, ${characXCood}, ${characYCood});
+	} else if (e.keyCode === 38) { 
+		Up(${charac}, ${characXCood}, ${characYCood});
+	} else if (e.keyCode === 39) { 
+		Right(${charac}, ${characXCood}, ${characYCood});
+	} else if (e.keyCode === 40) { 
+		Down(${charac}, ${characXCood}, ${characYCood});
 	}
 });
 
-function Up() {
+function Up(something, xCood, yCood) {
 	fetch('/usr/maze/keyUp', {
 		method: 'POST',
+		body: JSON.stringify({
+			something2: something,
+			xCood2: xCood,
+			yCood2: yCood
+		}),
 		headers: {
 			'Content-Type': 'application/json'
 		}
@@ -35,9 +40,14 @@ function Up() {
 	.catch(error => console.error('Error:', error));
 }
 
-function Down() {
+function Down(something, xCood, yCood) {
 	fetch('/usr/maze/keyDown', {
 		method: 'POST',
+		body: JSON.stringify({
+			something2: something,
+			xCood2: xCood,
+			yCood2: yCood
+		}),
 		headers: {
 			'Content-Type': 'application/json'
 		}
@@ -55,9 +65,14 @@ function Down() {
 	.catch(error => console.error('Error:', error));
 }
 
-function Left() {
+function Left(something, xCood, yCood) {
 	fetch('/usr/maze/keyLeft', {
 		method: 'POST',
+		body: JSON.stringify({
+			something2: something,
+			xCood2: xCood,
+			yCood2: yCood
+		}),
 		headers: {
 			'Content-Type': 'application/json'
 		}
@@ -74,9 +89,14 @@ function Left() {
 	.catch(error => console.error('Error:', error));
 }
 
-function Right() {
+function Right(something, xCood, yCood) {
 	fetch('/usr/maze/keyRight', {
 		method: 'POST',
+		body: JSON.stringify({
+			something2: something,
+			xCood2: xCood,
+			yCood2: yCood
+		}),
 		headers: {
 			'Content-Type': 'application/json'
 		}
@@ -104,7 +124,7 @@ function Right() {
 		<c:if test="${map[x][y] == 2}">
 			<div class="text-red-800 inline-block">${map[x][y]}</div>
 		</c:if>
-		<c:if test="${map[x][y] == 3}">
+		<c:if test="${map[x][y] == 9}">
 			<div class="text-blue-800 inline-block">${map[x][y]}</div>
 		</c:if>
 	</c:forEach>
