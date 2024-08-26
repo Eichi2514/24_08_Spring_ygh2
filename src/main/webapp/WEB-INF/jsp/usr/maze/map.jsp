@@ -27,8 +27,9 @@ function Up() {
 	.then(result => {
 		if (result === "success") {
 			window.location.reload();
-		} else {
-			alert("Error occurred: " + result);
+		}else {
+			alert("You " + result);
+			window.history.back();
 		}
 	})
 	.catch(error => console.error('Error:', error));
@@ -45,8 +46,10 @@ function Down() {
 	.then(result => {
 		if (result === "success") {
 			window.location.reload();
-		} else {
-			alert("Error occurred: " + result);
+			
+		}else {
+			alert("You " + result);
+			window.history.back();
 		}
 	})
 	.catch(error => console.error('Error:', error));
@@ -63,8 +66,9 @@ function Left() {
 	.then(result => {
 		if (result === "success") {
 			window.location.reload();
-		} else {
-			alert("Error occurred: " + result);
+		}else {
+			alert("You " + result);
+			window.history.back();
 		}
 	})
 	.catch(error => console.error('Error:', error));
@@ -82,20 +86,26 @@ function Right() {
 		if (result === "success") {
 			window.location.reload();
 		} else {
-			alert("Error occurred: " + result);
+			alert("You " + result);
+			window.history.back();
 		}
 	})
 	.catch(error => console.error('Error:', error));
 }
 </script>
-
-<c:forEach var="x" begin="0" end="${mapWidth}">
-	<c:forEach var="y" begin="0" end="${mapHeight}">
-		<c:if test="${map[x][y] != 2}">
+<c:forEach var="x" begin="0" end="${mapHeight}">
+	<c:forEach var="y" begin="0" end="${mapWidth}">
+		<c:if test="${map[x][y] == 0}">
 			<div class="text-gray-500 inline-block">${map[x][y]}</div>
+		</c:if>
+		<c:if test="${map[x][y] == 1}">
+			<div class="text-yellow-500 inline-block">${map[x][y]}</div>
 		</c:if>
 		<c:if test="${map[x][y] == 2}">
 			<div class="text-red-800 inline-block">${map[x][y]}</div>
+		</c:if>
+		<c:if test="${map[x][y] == 3}">
+			<div class="text-blue-800 inline-block">${map[x][y]}</div>
 		</c:if>
 	</c:forEach>
 	<br />

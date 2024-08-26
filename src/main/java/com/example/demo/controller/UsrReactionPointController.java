@@ -70,5 +70,56 @@ public class UsrReactionPointController {
 
 		return Ut.jsReplace(reactionRd.getResultCode(), reactionRd.getMsg(), replaceUri);
 	}
+	
+	@RequestMapping("/usr/reactionPoint/doGood")
+	@ResponseBody
+	public ResultData doGood(String relTypeCode, int relId) {
 
+		ResultData usersReactionRd = reactionPointService.usersReaction(rq.getLoginedMemberId(), relTypeCode, relId);
+
+		int usersReaction = (int) usersReactionRd.getData1();
+
+		if (usersReaction == 1) {
+			ResultData rd = reactionPointService.deleteGoodReactionPoint(rq.getLoginedMemberId(), relTypeCode, relId);
+			return ResultData.from("S-3", "좋아요 취소");
+		} else if (usersReaction == -1) {
+			ResultData rd = reactionPointService.deleteBadReactionPoint(rq.getLoginedMemberId(), relTypeCode, relId);
+			rd = reactionPointService.addGoodReactionPoint(rq.getLoginedMemberId(), relTypeCode, relId);
+			return ResultData.from("S-2", "싫어요 했었음");
+		}
+
+		ResultData reactionRd = reactionPointService.addGoodReactionPoint(rq.getLoginedMemberId(), relTypeCode, relId);
+
+		if (reactionRd.isFail()) {
+			return ResultData.from(reactionRd.getResultCode(), reactionRd.getMsg());
+		}
+
+		return ResultData.from(reactionRd.getResultCode(), reactionRd.getMsg());
+	}
+	
+	@RequestMapping("/usr/reactionPoint/doBad")
+	@ResponseBody
+	public ResultData doBad(String relTypeCode, int relId) {
+
+		ResultData usersReactionRd = reactionPointService.usersReaction(rq.getLoginedMemberId(), relTypeCode, relId);
+
+		int usersReaction = (int) usersReactionRd.getData1();
+
+		if (usersReaction == -1) {
+			ResultData rd = reactionPointService.deleteBadReactionPoint(rq.getLoginedMemberId(), relTypeCode, relId);
+			return ResultData.from("S-3", "싫어요 취소");
+		} else if (usersReaction == 1) {
+			ResultData rd = reactionPointService.deleteGoodReactionPoint(rq.getLoginedMemberId(), relTypeCode, relId);
+			rd = reactionPointService.addBadReactionPoint(rq.getLoginedMemberId(), relTypeCode, relId);
+			return ResultData.from("S-2", "좋아요 했었음");
+		}
+
+		ResultData reactionRd = reactionPointService.addBadReactionPoint(rq.getLoginedMemberId(), relTypeCode, relId);
+
+		if (reactionRd.isFail()) {
+			return ResultData.from(reactionRd.getResultCode(), reactionRd.getMsg());
+		}
+
+		return ResultData.from(reactionRd.getResultCode(), reactionRd.getMsg());
+	}
 }

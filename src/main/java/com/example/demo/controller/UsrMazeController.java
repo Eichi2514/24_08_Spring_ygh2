@@ -9,25 +9,33 @@ import com.example.demo.vo.Maze;
 
 @Controller
 public class UsrMazeController {
-	int mapWidth = 50;
+	int mapWidth = 150;
 	int mapHeight = 50;
-	
+
 	int[][] map = new int[mapHeight][mapWidth];
 
 	int xCood = 5;
 	int yCood = 5;
-	
-	UsrMazeController (){
-		for (int X = 0; X < mapWidth; X++) {
-			for (int Y = 0; Y < mapHeight; Y++) {
 
-				if (X == 0 || X == mapWidth-1 || Y == 0 || Y == mapHeight-1)
+	UsrMazeController() {
+		for (int X = 0; X < mapHeight ; X++) {
+			for (int Y = 0; Y < mapWidth; Y++) {
+				if (X == 0 || X == mapHeight - 1 || Y == 0 || Y == mapWidth - 1)
 					map[X][Y] = 1;
 			}
 		}
-
-		map[5][5] = 2;
+		for (int x = xCood; x <= xCood + 9; x++) {
+			for (int y = yCood; y <= yCood + 9; y++) {
+				map[x][y] = 2;
+			}
+		}
 		
+		for (int x = 20; x <= 20 + 9; x++) {
+			for (int y = 20; y <= 20 + 9; y++) {
+				map[x][y] = 3;
+			}
+		}
+
 	}
 
 	@RequestMapping("/usr/maze/map")
@@ -52,9 +60,19 @@ public class UsrMazeController {
 				&& map[xCood - 1][yCood + 3] == 0 && map[xCood - 1][yCood + 4] == 0 && map[xCood - 1][yCood + 5] == 0
 				&& map[xCood - 1][yCood + 6] == 0 && map[xCood - 1][yCood + 7] == 0 && map[xCood - 1][yCood + 8] == 0
 				&& map[xCood - 1][yCood + 9] == 0) {
-			map[xCood][yCood] = 0;
+			for (int x = xCood; x <= xCood + 9; x++) {
+				for (int y = yCood; y <= yCood + 9; y++) {
+					map[x][y] = 0;
+				}
+			}
 			xCood--;
-			map[xCood][yCood] = 2;
+			for (int x = xCood; x <= xCood + 9; x++) {
+				for (int y = yCood; y <= yCood + 9; y++) {
+					map[x][y] = 2;
+				}
+			}
+		} else {
+			return "Lost";
 		}
 		return "success";
 	}
@@ -63,13 +81,23 @@ public class UsrMazeController {
 	@ResponseBody
 	public String keyDown() {
 
-		if (map[xCood + 11][yCood] == 0 && map[xCood + 11][yCood + 1] == 0 && map[xCood + 11][yCood + 2] == 0
-				&& map[xCood + 11][yCood + 3] == 0 && map[xCood + 11][yCood + 4] == 0 && map[xCood + 11][yCood + 5] == 0
-				&& map[xCood + 11][yCood + 6] == 0 && map[xCood + 11][yCood + 7] == 0 && map[xCood + 11][yCood + 8] == 0
-				&& map[xCood + 11][yCood + 9] == 0) {
-			map[xCood][yCood] = 0;
+		if (map[xCood + 10][yCood] == 0 && map[xCood + 10][yCood + 1] == 0 && map[xCood + 10][yCood + 2] == 0
+				&& map[xCood + 10][yCood + 3] == 0 && map[xCood + 10][yCood + 4] == 0 && map[xCood + 10][yCood + 5] == 0
+				&& map[xCood + 10][yCood + 6] == 0 && map[xCood + 10][yCood + 7] == 0 && map[xCood + 10][yCood + 8] == 0
+				&& map[xCood + 10][yCood + 9] == 0) {
+			for (int x = xCood; x <= xCood + 9; x++) {
+				for (int y = yCood; y <= yCood + 9; y++) {
+					map[x][y] = 0;
+				}
+			}
 			xCood++;
-			map[xCood][yCood] = 2;
+			for (int x = xCood; x <= xCood + 9; x++) {
+				for (int y = yCood; y <= yCood + 9; y++) {
+					map[x][y] = 2;
+				}
+			}
+		} else {
+			return "Lost";
 		}
 		return "success";
 	}
@@ -82,9 +110,19 @@ public class UsrMazeController {
 				&& map[xCood + 3][yCood - 1] == 0 && map[xCood + 4][yCood - 1] == 0 && map[xCood + 5][yCood - 1] == 0
 				&& map[xCood + 6][yCood - 1] == 0 && map[xCood + 7][yCood - 1] == 0 && map[xCood + 8][yCood - 1] == 0
 				&& map[xCood + 9][yCood - 1] == 0) {
-			map[xCood][yCood] = 0;
+			for (int x = xCood; x <= xCood + 9; x++) {
+				for (int y = yCood; y <= yCood + 9; y++) {
+					map[x][y] = 0;
+				}
+			}
 			yCood--;
-			map[xCood][yCood] = 2;
+			for (int x = xCood; x <= xCood + 9; x++) {
+				for (int y = yCood; y <= yCood + 9; y++) {
+					map[x][y] = 2;
+				}
+			}
+		} else {
+			return "Lost";
 		}
 		return "success";
 	}
@@ -93,14 +131,24 @@ public class UsrMazeController {
 	@ResponseBody
 	public String keyRight(Model model) {
 
-		if (map[xCood][yCood + 11] == 0 && map[xCood + 1][yCood + 11] == 0 && map[xCood + 2][yCood + 11] == 0
-				&& map[xCood + 3][yCood + 11] == 0 && map[xCood + 4][yCood + 11] == 0 && map[xCood + 5][yCood + 11] == 0
-				&& map[xCood + 6][yCood + 11] == 0 && map[xCood + 7][yCood + 11] == 0 && map[xCood + 8][yCood + 11] == 0
-				&& map[xCood + 9][yCood + 11] == 0) {
-			map[xCood][yCood] = 0;
+		if (map[xCood][yCood + 10] == 0 && map[xCood + 1][yCood + 10] == 0 && map[xCood + 2][yCood + 10] == 0
+				&& map[xCood + 3][yCood + 10] == 0 && map[xCood + 4][yCood + 10] == 0 && map[xCood + 5][yCood + 10] == 0
+				&& map[xCood + 6][yCood + 10] == 0 && map[xCood + 7][yCood + 10] == 0 && map[xCood + 8][yCood + 10] == 0
+				&& map[xCood + 9][yCood + 10] == 0) {
+			for (int x = xCood; x <= xCood + 9; x++) {
+				for (int y = yCood; y <= yCood + 9; y++) {
+					map[x][y] = 0;
+				}
+			}
 			yCood++;
-			map[xCood][yCood] = 2;
+			for (int x = xCood; x <= xCood + 9; x++) {
+				for (int y = yCood; y <= yCood + 9; y++) {
+					map[x][y] = 2;
+				}
+			}
 
+		} else {
+			return "Lost";
 		}
 		return "success";
 	}
