@@ -6,6 +6,9 @@
 <script>
 	const params = {};
 	params.id = parseInt('${param.id}');
+	params.memberId = parseInt('${loginedMemberId}')
+	console.log(params);
+	console.log(params.memberId);
 	
 	var isAlreadyAddGoodRp = ${isAlreadyAddGoodRp};
 	var isAlreadyAddBadRp = ${isAlreadyAddBadRp};
@@ -47,6 +50,14 @@
 	}
 
 	function doGood(articleId) {
+		if(isNaN(params.memberId) == true){
+			if(confirm('로그인 창으로 이동하시겠습니까?')){
+				var currentUri = encodeURIComponent(window.location.href);
+				window.location.href = '../member/login?afterLoginUri=' + currentUri;
+			}
+			return;
+		}	
+		
 		$.ajax({
 			url : '/usr/reactionPoint/doGood',
 			type : 'POST',
@@ -86,6 +97,14 @@
 	}
 
 	function doBad(articleId) {
+		if(isNaN(params.memberId) == true){
+			if(confirm('로그인 창으로 이동하시겠습니까?')){
+				var currentUri = encodeURIComponent(window.location.href);
+				window.location.href = '../member/login?afterLoginUri=' + currentUri;
+			}
+			return;
+		}	
+		
 		$.ajax({
 			url : '/usr/reactionPoint/doBad',
 			type : 'POST',

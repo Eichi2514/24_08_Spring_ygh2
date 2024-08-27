@@ -20,8 +20,6 @@ public class BeforeActionInterceptor implements HandlerInterceptor {
 
 		rq.initBeforeActionInterceotor();
 
-		req.setAttribute("rq", rq);
-
 		return HandlerInterceptor.super.preHandle(req, resp, handler);
 	}
 

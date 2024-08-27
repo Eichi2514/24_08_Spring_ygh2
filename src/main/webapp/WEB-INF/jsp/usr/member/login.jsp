@@ -4,7 +4,7 @@
 <%@ include file="../common/head.jspf"%>
 
 <form method="POST" action="doLogin">
-	
+	<input type="hidden" name="afterLoginUri" value="${param.afterLoginUri }" />
 	<div>
 		아이디 : <input type="text" placeholder="아이디 입력" name="loginId"  style="background-color:transparent;"/>
 	</div>
