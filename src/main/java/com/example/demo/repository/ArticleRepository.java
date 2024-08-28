@@ -42,10 +42,12 @@ public interface ArticleRepository {
 
 	@Select("""
 			<script>
-			SELECT A.*, M.nickname AS extra__writer
+			SELECT A.*, M.nickname AS extra__writer, IFNULL(COUNT(R.id),0) AS extra__repliesCount
             FROM article AS A
             INNER JOIN `member` AS M 
             ON A.memberId = M.id
+            LEFT JOIN `reply` AS R
+			ON A.id = R.relId
 			WHERE 1
 			<if test="boardId > 0">
 			AND A.boardId = #{boardId}
@@ -53,6 +55,7 @@ public interface ArticleRepository {
 			<if test="search != ''">
 			AND ${search} LIKE '%${str}%'
 			</if>
+			GROUP BY A.id
 			ORDER BY A.id DESC
 			LIMIT #{limitFrom}, #{itemsInAPage}
 			</script>

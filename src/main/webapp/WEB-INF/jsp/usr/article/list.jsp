@@ -8,11 +8,9 @@
 	<c:set var="paginationLen" value="3" />
 	<c:set var="startPage" value="${page -  paginationLen  >= 1 ? page - paginationLen : 1}" />
 	<c:set var="endPage" value="${page +  paginationLen  <= totalPage ? page + paginationLen : totalPage}" />
-	
 	<c:set var="baseUri" value="?boardId=${boardId}" />
 	<c:set var="baseUri" value="${baseUri}&search=${search}" />
 	<c:set var="baseUri" value="${baseUri}&str=${str}" />
-	
 	<a href="list${baseUri}&page=${lpage}">이전</a>
 	<c:if test="${startPage > 1 }">
 		<a href="?page=1&${baseUri}">1</a>
@@ -50,7 +48,13 @@
 					<tr>
 						<td style="text-align: center;">${article.id}</td>
 						<td style="text-align: center;">${article.regDate.substring(0,10)}</td>
-						<td style="text-align: center;"><a class="hover:underline" href="detail?id=${article.id}">${article.title}</a></td>
+						<td style="text-align: center;">
+							<a class="hover:underline" href="detail?id=${article.id}">${article.title}
+								<c:if test="${article.extra__repliesCount > 0 }">
+									<span style="color: red;">[${article.extra__repliesCount }]</span>
+								</c:if>
+							</a>
+						</td>
 						<td style="text-align: center;">${article.extra__writer}</td>
 						<td style="text-align: center;">${article.hitCount}</td>
 						<td style="text-align: center;">${article.goodReactionPoint}</td>
@@ -66,7 +70,7 @@
 	<div class="flex justify-center p-10">
 		<form method="POST" action="list">
 			<select class="text-black p-1" name="search" data-value="${search}">
-			    <option class="text-black" value="title">제목</option>
+				<option class="text-black" value="title">제목</option>
 				<option class="text-black" value="body">내용</option>
 			</select>
 			<input type="hidden" value="${boardId}" name="boardId" />

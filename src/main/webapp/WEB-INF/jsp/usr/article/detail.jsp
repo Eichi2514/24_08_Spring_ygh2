@@ -13,7 +13,6 @@
 	var isAlreadyAddGoodRp = ${isAlreadyAddGoodRp};
 	var isAlreadyAddBadRp = ${isAlreadyAddBadRp};
 </script>
-
 <script>
 	function ArticleDetail__doIncreaseHitCount() {
 		const localStorageKey = 'article__' + params.id + '__alreadyOnView';
@@ -187,13 +186,13 @@
 		<div>▼ ajax 방식 ▼</div>
 		<button class="like_btn cursor-pointer inline-block" onclick="doGood(${param.id})" style="text-align: center;">
 			Like ▲(
-			<span class = "likeCount">${article.goodReactionPoint}</span>
+			<span class="likeCount">${article.goodReactionPoint}</span>
 			)
 		</button>
 		<br />
 		<button class="bad_btn cursor-pointer inline-block" onclick="doBad(${param.id})" style="text-align: center;">
 			Bad ▼(
-			<span class = "badCount">${article.badReactionPoint} </span>
+			<span class="badCount">${article.badReactionPoint} </span>
 			)
 		</button>
 		<div class="btns">
@@ -208,4 +207,64 @@
 		</div>
 	</div>
 </section>
+<section class="mt-24 text-xl px-4">
+	<hr />
+	<br />
+	<!-- 	댓글 리스트 -->
+	<div class="mx-auto">
+		<table border="1" cellspacing="0" cellpadding="5" style="width: 100%; border-collapse: collapse;">
+			<thead>
+				<tr>
+					<th style="text-align: center;">Registration Date</th>
+					<th style="text-align: center;">Writer</th>
+					<th style="text-align: center;">Body</th>
+					<th style="text-align: center;">Like</th>
+					<th style="text-align: center;">Dislike</th>
+				</tr>
+			</thead>
+			<tbody>
+				<c:forEach var="reply" items="${replies}">
+					<tr class="hover">
+						<td style="text-align: center;">${reply.regDate.substring(0,10)}</td>
+						<td style="text-align: center;">${reply.extra__writer}</td>
+						<td style="text-align: center;">${reply.body}</td>
+						<td style="text-align: center;">${reply.goodReactionPoint}</td>
+						<td style="text-align: center;">${reply.badReactionPoint}</td>
+					</tr>
+				</c:forEach>
+				<c:if test="${empty replies}">
+					<tr>
+						<td colspan="4" style="text-align: center;">댓글이 없습니다</td>
+					</tr>
+				</c:if>
+			</tbody>
+		</table>
+	</div>
+	<!-- 댓글 -->
+	<br />
+	<hr />
+	<div class="flex justify-center p-10">
+		<c:if test="${rq.isLogined() }">
+			<form action="../reply/doWrite" method="POST" onsubmit="ReplyWrite__submit(this); return false;" )>
+				<table class="table" border="1" cellspacing="0" cellpadding="5" style="width: 100%; border-collapse: collapse;">
+					<input type="hidden" name="relTypeCode" value="article" />
+					<input type="hidden" name="relId" value="${article.id }" />
+					<tbody>
+						<tr>
+							<th>댓글 내용 입력</th>
+							<td style="text-align: center;">
+								<input style="background-color: transparent;" name="body" autocomplete="off" type="text" placeholder="내용을 입력해"></input>
+								<button class="btn btn-outline">작성</button>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</form>
+		</c:if>
+		<c:if test="${!rq.isLogined() }">
+		댓글 작성을 위해 <a href="../member/login">로그인</a>이 필요합니다
+	</c:if>
+	</div>
+</section>
+<br />
 <%@ include file="../common/foot.jspf"%>
