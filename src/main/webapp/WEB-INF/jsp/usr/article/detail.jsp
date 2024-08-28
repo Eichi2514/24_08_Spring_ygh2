@@ -146,6 +146,39 @@
 		checkRP();
 	});
 </script>
+<!-- 댓글 수정 -->
+<script>
+function toggleModifybtn(replyId) {
+	
+	console.log(replyId);
+	
+	$('.modify-btn-'+replyId).hide();
+	$('.save-btn-'+replyId).show();
+	$('.reply-'+replyId).hide();
+	$('.modify-form-'+replyId).show();
+}
+
+function doModifyReply(replyId) {
+	    var form = $('.modify-form-' + replyId);
+	    var text = form.find('input[name="reply-text-' + replyId + '"]').val();
+	    var action = form.attr('action');
+    $.post({
+    	url: '/usr/reply/doModify',
+        type: 'POST',
+        data: { id: replyId, body: text },
+        success: function(data) {
+        	$('.modify-form-'+replyId).hide();
+        	$('.reply-'+replyId).text(data);
+        	$('.reply-'+replyId).show();
+        	$('.save-btn-'+replyId).hide();
+        	$('.modify-btn-'+replyId).show();
+        },
+        error: function(xhr, status, error) {
+            alert('댓글 수정에 실패했습니다: ' + error);
+        }
+	})
+}
+</script>
 <section class="mt-8 text-xl px-4">
 	<div class="mx-auto">
 		<table border="1" cellspacing="0" cellpadding="5" style="width: 100%; border-collapse: collapse;">
@@ -174,7 +207,7 @@
 				</tr>
 			</tbody>
 		</table>
-		<a href="/usr/reactionPoint/doGoodReaction?relTypeCode=article&relId=${param.id }&replaceUri=${rq.currentUri}"
+		<%-- <a href="/usr/reactionPoint/doGoodReaction?relTypeCode=article&relId=${param.id }&replaceUri=${rq.currentUri}"
 			class="cursor-pointer ${isAlreadyAddGoodRp ? 'text-red-500' : '' } inline-block" style="text-align: center;">Like
 			▲(${article.goodReactionPoint})</a>
 		<br />
@@ -183,15 +216,15 @@
 			▼(${article.badReactionPoint})</a>
 		<br />
 		<br />
-		<div>▼ ajax 방식 ▼</div>
+		<div>▼ ajax 방식 ▼</div> --%>
 		<button class="like_btn cursor-pointer inline-block" onclick="doGood(${param.id})" style="text-align: center;">
-			Like ▲(
+			Like ▲ (
 			<span class="likeCount">${article.goodReactionPoint}</span>
 			)
 		</button>
 		<br />
 		<button class="bad_btn cursor-pointer inline-block" onclick="doBad(${param.id})" style="text-align: center;">
-			Bad ▼(
+			Bad ▼ (
 			<span class="badCount">${article.badReactionPoint} </span>
 			)
 		</button>
@@ -207,41 +240,23 @@
 		</div>
 	</div>
 </section>
+<script>
+	function ReplyWrite__submit(form) {
+		console.log(form.body.value);
+		
+		form.body.value = form.body.value.trim();
+		
+		if(form.body.value.length < 3){
+			alert('3글자 이상 입력해');
+			form.body.focus();
+			return;
+		}
+		
+		form.submit();
+	}
+</script>
 <section class="mt-24 text-xl px-4">
-	<hr />
-	<br />
-	<!-- 	댓글 리스트 -->
-	<div class="mx-auto">
-		<table border="1" cellspacing="0" cellpadding="5" style="width: 100%; border-collapse: collapse;">
-			<thead>
-				<tr>
-					<th style="text-align: center;">Registration Date</th>
-					<th style="text-align: center;">Writer</th>
-					<th style="text-align: center;">Body</th>
-					<th style="text-align: center;">Like</th>
-					<th style="text-align: center;">Dislike</th>
-				</tr>
-			</thead>
-			<tbody>
-				<c:forEach var="reply" items="${replies}">
-					<tr class="hover">
-						<td style="text-align: center;">${reply.regDate.substring(0,10)}</td>
-						<td style="text-align: center;">${reply.extra__writer}</td>
-						<td style="text-align: center;">${reply.body}</td>
-						<td style="text-align: center;">${reply.goodReactionPoint}</td>
-						<td style="text-align: center;">${reply.badReactionPoint}</td>
-					</tr>
-				</c:forEach>
-				<c:if test="${empty replies}">
-					<tr>
-						<td colspan="4" style="text-align: center;">댓글이 없습니다</td>
-					</tr>
-				</c:if>
-			</tbody>
-		</table>
-	</div>
 	<!-- 댓글 -->
-	<br />
 	<hr />
 	<div class="flex justify-center p-10">
 		<c:if test="${rq.isLogined() }">
@@ -262,8 +277,58 @@
 			</form>
 		</c:if>
 		<c:if test="${!rq.isLogined() }">
-		댓글 작성을 위해 <a href="../member/login">로그인</a>이 필요합니다
+		댓글 작성을 위해 <a class="pl-2" href="../member/login"> 로그인 </a>이 필요합니다
 	</c:if>
+	</div>
+	<hr />
+	<!-- 	댓글 리스트 -->
+	<div class="mx-auto p-10">
+		<table border="1" cellspacing="0" cellpadding="5" style="width: 100%; border-collapse: collapse;">
+			<thead>
+				<tr>
+					<th style="text-align: center;">Registration Date</th>
+					<th style="text-align: center;">Writer</th>
+					<th style="text-align: center;">Body</th>
+					<th style="text-align: center;">Like</th>
+					<th style="text-align: center;">Dislike</th>
+					<th style="text-align: center;">Edit</th>
+					<th style="text-align: center;">Delete</th>
+				</tr>
+			</thead>
+			<tbody>
+				<c:forEach var="reply" items="${replies}">
+					<tr class="hover">
+						<td style="text-align: center;">${reply.regDate.substring(0,10)}</td>
+						<td style="text-align: center;">${reply.extra__writer}</td>
+						<td style="text-align: center;">
+							<span class="reply-${reply.id }">${reply.body}</span>
+							<form method="POST" class="modify-form-${reply.id }" style="display: none;" action="/usr/reply/doModify">
+								<input type="text" value="${reply.body }" name="reply-text-${reply.id }" style="background-color: transparent;" />
+							</form>
+						</td>
+						<td style="text-align: center;">${reply.goodReactionPoint}</td>
+						<td style="text-align: center;">${reply.badReactionPoint}</td>
+						<td style="text-align: center;">
+							<c:if test="${reply.userCanModify }">
+								<button onclick="toggleModifybtn('${reply.id}');" style="white-space: nowrap;" class="modify-btn-${reply.id }">수정</button>
+								<button onclick="doModifyReply('${reply.id}');" style="white-space: nowrap; display: none;"
+									class="save-btn-${reply.id }">저장</button>
+							</c:if>
+						</td>
+						<td style="text-align: center;">
+							<c:if test="${reply.userCanDelete }">
+								<a class="" onclick="if(confirm('정말 삭제?') == false) return false;" href="../reply/doDelete?id=${reply.id }&articleId=${article.id}">삭제</a>
+							</c:if>
+						</td>
+					</tr>
+				</c:forEach>
+				<c:if test="${empty replies}">
+					<tr>
+						<td colspan="4" style="text-align: center;">댓글이 없습니다</td>
+					</tr>
+				</c:if>
+			</tbody>
+		</table>
 	</div>
 </section>
 <br />

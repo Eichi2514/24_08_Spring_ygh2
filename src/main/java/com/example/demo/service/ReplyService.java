@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 
 import com.example.demo.repository.ReplyRepository;
 import com.example.demo.util.Ut;
-import com.example.demo.vo.Article;
 import com.example.demo.vo.Reply;
 import com.example.demo.vo.ResultData;
 
@@ -21,8 +20,25 @@ public class ReplyService {
 		this.replyRepository = replyRepository;
 	}
 
-	public List<Reply> getForPrintReplies(String relTypeCode, int id) {
-		return replyRepository.getForPrintReplies(relTypeCode, id);
+	public List<Reply> getForPrintReplies(int loginedMemberId, String relTypeCode, int id) {
+		List<Reply> replies = replyRepository.getForPrintReplies(loginedMemberId, relTypeCode, id);
+
+		for (Reply reply : replies) {
+			controlForPrintData(loginedMemberId, reply);
+		}
+
+		return replies;
+	}
+
+	private void controlForPrintData(int loginedMemberId, Reply reply) {
+		if (reply == null) {
+			return;
+		}
+		ResultData userCanModifyRd = userCanModify(loginedMemberId, reply);
+		reply.setUserCanModify(userCanModifyRd.isSuccess());
+
+		ResultData userCanDeleteRd = userCanDelete(loginedMemberId, reply);
+		reply.setUserCanDelete(userCanModifyRd.isSuccess());
 	}
 
 	public ResultData writeReply(int loginedMemberId, String body, String relTypeCode, int relId) {
@@ -45,6 +61,19 @@ public class ReplyService {
 			return ResultData.from("F-2", Ut.f("%d번 댓글에 대한 수정 권한이 없습니다", reply.getId()));
 		}
 		return ResultData.from("S-1", Ut.f("%d번 댓글을 수정했습니다", reply.getId()), "수정된 게시글", reply);
+	}
+	
+	public Reply getReply(int id) {
+		return replyRepository.getReply(id);
+	}
+
+	public void modifyReply(int id, String body) {
+		replyRepository.modifyReply(id, body);
+	}
+
+	public void deleteReply(int id) {
+		replyRepository.deleteReply(id);
+		
 	}
 
 }
