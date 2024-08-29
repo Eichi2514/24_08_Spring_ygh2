@@ -12,7 +12,6 @@
 					<tr>
 						<th>아이디</th>
 						<td style="text-align: center;">${rq.loginedMember.loginId }</td>
-
 					</tr>
 					<tr>
 						<th>비밀번호</th>
@@ -20,14 +19,12 @@
 							<input name="loginPw" autocomplete="off"
 								type="text" placeholder="비밀번호를 입력해" style="background-color:transparent;"/>
 						</td>
-
 					</tr>
 					<tr>
 						<th></th>
 						<td style="text-align: center;">
-							<button class="btn btn-primary">로그인</button>
+							<button>로그인</button>
 						</td>
-
 					</tr>
 				</tbody>
 			</table>

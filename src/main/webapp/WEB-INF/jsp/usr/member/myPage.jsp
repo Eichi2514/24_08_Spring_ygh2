@@ -6,8 +6,7 @@
 
 <section class="mt-24 px-4">
 	<div class="mx-auto">
-		<form action="../member/doCheckPw" method="POST">
-			<table class="table" border="1" cellspacing="0" cellpadding="5" style="width: 100%; border-collapse: collapse;">
+		<table class="table" border="1" cellspacing="0" cellpadding="5" style="width: 100%; border-collapse: collapse;">
 				<tbody>
 					<tr>
 						<th>가입일</th>
@@ -45,7 +44,6 @@
 					</tr>
 				</tbody>
 			</table>
-		</form>
 		<div class="btns">
 			<button class="btn" type="button" onclick="history.back()">뒤로가기</button>
 		</div>

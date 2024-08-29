@@ -2,6 +2,8 @@ package com.example.demo.repository;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
+
 import com.example.demo.vo.Member;
 @Mapper
 public interface MemberRepository {
@@ -21,5 +23,23 @@ public interface MemberRepository {
 			AND email = #{email}
 			""")
 	public Member getMemberByNameAndEmail(String name, String email);
+	
+	
+	
+	@Update("""
+			<script>
+			UPDATE `member` 
+			SET	updateDate = NOW(),		
+			<if test="loginPw != 'No'">
+			loginPw = #{loginPw}, 
+			</if>
+			`name` = #{name},
+			`nickname` = #{nickname}, 
+			`email` = #{email},
+			`cellphoneNum` = #{cellphoneNum}  
+			WHERE id = #{loginedMemberId}
+			</script>
+			""")
+	public void modifyMember(int loginedMemberId, String loginPw, String name, String nickname, String email, String cellphoneNum);
 
 }

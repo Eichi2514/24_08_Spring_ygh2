@@ -52,4 +52,11 @@ public class MemberService {
 		return memberRepository.getMemberById(id);
 	}
 
+	public ResultData modifyMember(int loginedMemberId, String loginPw, String name, String nickname, String email,
+			String cellphoneNum) {
+		memberRepository.modifyMember(loginedMemberId, loginPw, name, nickname, email, cellphoneNum);
+		return ResultData.from("S-1", "수정 완료");
+
+	}
+
 }

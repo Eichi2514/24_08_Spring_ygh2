@@ -3,19 +3,23 @@ package com.example.demo.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.example.demo.service.MemberService;
 import com.example.demo.util.Ut;
+import com.example.demo.vo.Article;
 import com.example.demo.vo.Member;
 import com.example.demo.vo.ResultData;
 import com.example.demo.vo.Rq;
 
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
 
 @Controller
 public class UsrMemberController {
+	
+	@Autowired
+	private Rq rq;
 
 	@Autowired
 	private MemberService memberService;
@@ -119,6 +123,48 @@ public class UsrMemberController {
 	@RequestMapping("/usr/member/checkPw")
 	public String showCheckPw() {
 		return "usr/member/checkPw";
+	}
+	
+	@RequestMapping("/usr/member/doCheckPw")
+	@ResponseBody
+	public String doCheckPw(String loginPw) {
+		if (Ut.isEmptyOrNull(loginPw)) {
+			return Ut.jsHistoryBack("F-1", "비밀번호 입력 x");
+		}
+
+		if (rq.getLoginedMember().getLoginPw().equals(loginPw) == false) {
+			return Ut.jsHistoryBack("F-2", "비밀번호 틀림");
+		}
+
+		return Ut.jsReplace("S-1", Ut.f("비밀번호 확인 성공"), "modify");
+	}
+
+	@RequestMapping("/usr/member/modify")
+	public String showmyModify() {
+		return "usr/member/modify";
+	}
+	
+	@RequestMapping("/usr/member/doModify")
+	@ResponseBody
+	public String doModify(HttpServletRequest req, @RequestParam(defaultValue = "No") String loginPw, String name, String nickname, String email, String cellphoneNum) {
+
+			if (Ut.isEmptyOrNull(name)) {
+				return Ut.jsHistoryBack("F-3", "name 입력 x");
+			}
+			if (Ut.isEmptyOrNull(nickname)) {
+				return Ut.jsHistoryBack("F-4", "nickname 입력 x");
+			}
+			if (Ut.isEmptyOrNull(cellphoneNum)) {
+				return Ut.jsHistoryBack("F-5", "cellphoneNum 입력 x");
+			}
+			if (Ut.isEmptyOrNull(email)) {
+				return Ut.jsHistoryBack("F-6", "email 입력 x");
+			}
+		
+			ResultData a = memberService.modifyMember(rq.getLoginedMemberId(), loginPw, name, nickname, email, cellphoneNum);
+			
+		
+		return Ut.jsReplace("S-1", Ut.f("회원정보 수정 성공"), "myPage");
 	}
 
 }
