@@ -54,6 +54,10 @@ public class MyWebMVCConfigurer implements WebMvcConfigurer {
 		ir.addPathPatterns("/usr/article/doModify");
 		ir.addPathPatterns("/usr/article/doDelete");
 		ir.addPathPatterns("/usr/member/doLogout");
+		
+		ir.addPathPatterns("/usr/member/myPage");
+		ir.addPathPatterns("/usr/member/checkPw");
+		ir.addPathPatterns("/usr/member/doCheckPw");
 
 		ir.addPathPatterns("/usr/reactionPoint/doGoodReaction");
 		ir.addPathPatterns("/usr/reactionPoint/doBadReaction");
@@ -63,6 +67,11 @@ public class MyWebMVCConfigurer implements WebMvcConfigurer {
 		ir.addPathPatterns("/usr/member/doLogin");
 		ir.addPathPatterns("/usr/member/join");
 		ir.addPathPatterns("/usr/member/doJoin");
+		
+		ir.addPathPatterns("/usr/member/findLoginId");
+		ir.addPathPatterns("/usr/member/doFindLoginId");
+		ir.addPathPatterns("/usr/member/findLoginPw");
+		ir.addPathPatterns("/usr/member/doFindLoginPw");
 
 	}
 

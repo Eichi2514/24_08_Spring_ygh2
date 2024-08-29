@@ -317,7 +317,7 @@ function doModifyReply(replyId) {
 						</td>
 						<td style="text-align: center;">
 							<c:if test="${reply.userCanDelete }">
-								<a class="" onclick="if(confirm('정말 삭제?') == false) return false;" href="../reply/doDelete?id=${reply.id }&articleId=${article.id}">삭제</a>
+								<a class="" onclick="if(confirm('댓글을 삭제하시겠습니까?') == false) return false;" href="../reply/doDelete?id=${reply.id }&articleId=${article.id}">삭제</a>
 							</c:if>
 						</td>
 					</tr>
