@@ -9,7 +9,6 @@
 		form.loginPw.value = form.loginPw.value.trim();
 		form.loginPwConfirm.value = form.loginPwConfirm.value.trim();
 
-
 			if (form.loginPwConfirm.value != form.loginPw.value) {
 				alert('비번 불일치');
 				return;

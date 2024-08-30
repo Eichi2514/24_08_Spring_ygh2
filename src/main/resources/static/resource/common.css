@@ -50,6 +50,10 @@ header>div>ul>li {
 	margin-right: 30px;
 }
 
+.toastui-editor-contents {
+	text-align: center;
+}
+
 .list>ul {
 	display: none;
 	position: absolute;
@@ -58,6 +62,7 @@ header>div>ul>li {
 .list:hover>ul {
 	display: block;
 }
-.pagination > a{
+
+.pagination>a {
 	padding: 5px;
 }

@@ -161,7 +161,7 @@ public class UsrMemberController {
 				return Ut.jsHistoryBack("F-6", "email 입력 x");
 			}
 		
-			ResultData a = memberService.modifyMember(rq.getLoginedMemberId(), loginPw, name, nickname, email, cellphoneNum);
+			ResultData modifyRD = memberService.modifyMember(rq.getLoginedMemberId(), loginPw, name, nickname, email, cellphoneNum);
 			
 		
 		return Ut.jsReplace("S-1", Ut.f("회원정보 수정 성공"), "myPage");
