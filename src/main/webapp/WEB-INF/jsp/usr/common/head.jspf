@@ -29,7 +29,7 @@
 						<li><a class="hover:underline" href="../article/list?boardId=3">Q&A</a></li>
 					</ul>
 				</li>
-				<li><a class="hover:underline" href="../maze/map">MAP</a></li>
+				<li><a class="hover:underline" href="../FAQ/list">FAQ</a></li>
 				<c:if test="${!rq.isLogined() }">
 					<li><a class="hover:underline" href="../member/join">JOIN</a></li>
 					<li><a class="hover:underline" href="../member/login">LOGIN</a></li>
