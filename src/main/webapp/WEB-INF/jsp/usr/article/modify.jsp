@@ -1,4 +1,5 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <c:set var="pageTitle" value="MODIFY"></c:set>
 <%@ include file="../common/head.jspf"%>
@@ -22,13 +23,16 @@
 		form.submit();
 	}
 </script>
-<form onsubmit="ArticleModify__submit(this); return false;" action=" ../article/doModify" method="POST">
+<form onsubmit="ArticleModify__submit(this); return false;"
+	action=" ../article/doModify" method="POST"
+	enctype="multipart/form-data">
+	<input type="hidden" name="body" />
 	<input type="hidden" value="${article.id}" name="id" />
 	<div>작성자 : ${article.extra__writer}</div>
 	<div>날짜 : ${article.regDate}</div>
 	<div>
-		새 제목 :
-		<input type="text" placeholder="제목 입력" name="title" style="background-color: transparent;" />
+		새 제목 : <input type="text" placeholder="제목 입력" name="title"
+			style="background-color: transparent;" />
 	</div>
 	<div>
 		새 내용 :

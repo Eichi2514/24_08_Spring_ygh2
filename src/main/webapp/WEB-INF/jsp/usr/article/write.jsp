@@ -21,7 +21,8 @@
 		form.submit();
 	}
 </script>
-<form onsubmit="ArticleWrite__submit(this); return false;" action="../article/doWrite" method="POST">
+<form onsubmit="ArticleWrite__submit(this); return false;" action="../article/doWrite" method="POST" enctype="multipart/form-data">
+<input type="hidden" name="body" />
 	<tr>
 		<th>게시판</th>
 		<td class="text-black" style="text-align: center;">
